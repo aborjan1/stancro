@@ -77,9 +77,10 @@ const Housing = () => {
     queryKey: ['listings', searchTerm, filters],
     queryFn: async () => {
       try {
+        // Type assertion to fix the TypeScript error
         let query = supabase
           .from('listings')
-          .select('*');
+          .select('*') as any;
         
         // Apply filters
         if (searchTerm) {
