@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { Building, Home, Search, Shield, Star, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import CitiesCarousel from "@/components/CitiesCarousel";
 
 const Index = () => {
   const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
@@ -76,6 +77,9 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="flex-grow">
+        {/* Cities Carousel - NEW SECTION */}
+        <CitiesCarousel />
+        
         {/* Features Section */}
         <section className="py-16 md:py-24 bg-white">
           <div className="container mx-auto px-4">
