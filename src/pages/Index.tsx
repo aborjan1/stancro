@@ -99,11 +99,11 @@ const Index = () => {
               </div>
               <div className="md:w-5/12">
                 <div className="relative">
-                  {/* Main app preview */}
+                  {/* Main app preview - Updated to show Zagreb */}
                   <div className="bg-white p-4 rounded-lg shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-300">
                     <img 
-                      src="/placeholder.svg" 
-                      alt="StanCro Application Preview" 
+                      src="https://images.unsplash.com/photo-1541232484988-44a4147ad6c0" 
+                      alt="Zagreb City View" 
                       className="rounded-md w-full"
                     />
                   </div>
