@@ -189,7 +189,7 @@ const Index = () => {
             <div className="md:w-1/2">
               <div className="rounded-lg overflow-hidden shadow-xl">
                 <img 
-                  src="/placeholder.svg" 
+                  src="https://www.investopedia.com/thmb/2-g8OpYwO_EQbVTS4Yuxl7aBmkw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/rentingahouse-3075159c4f894931b2af822ded2e56c5.jpg" 
                   alt="List your property" 
                   className="w-full h-auto"
                 />
