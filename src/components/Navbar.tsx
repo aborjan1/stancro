@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { 
@@ -9,7 +8,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Home, Search, Filter, Info, SlidersHorizontal, LogIn, UserCircle, LogOut } from "lucide-react";
+import { Home, Search, Filter, Info, SlidersHorizontal, LogIn, UserCircle, LogOut, Settings, Building, User, Users, Coins, HelpCircle, ShieldCheck, Lightbulb, MessageCircle, FileText, Newspaper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -30,7 +29,6 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-// Define the filter options interface
 interface FilterOptions {
   priceRange: [number, number];
   propertyTypes: string[];
@@ -38,7 +36,6 @@ interface FilterOptions {
   bathrooms: number | null;
 }
 
-// Define the search params interface
 interface SearchParams {
   searchTerm: string;
   filters: FilterOptions;
@@ -52,7 +49,6 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const { user, signOut } = useAuth();
   
-  // Filter states
   const [priceRange, setPriceRange] = useState<[number, number]>([200, 900]);
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState<string[]>([]);
   const [bedrooms, setBedrooms] = useState<number | null>(null);
@@ -89,7 +85,6 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
     if (onSearch) {
       onSearch(searchParams);
     } else {
-      // Convert filter options to URL parameters
       const params = new URLSearchParams();
       params.set('search', searchTerm);
       
@@ -103,7 +98,6 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
       if (bedrooms !== null) params.set('beds', bedrooms.toString());
       if (bathrooms !== null) params.set('baths', bathrooms.toString());
       
-      // Navigate to housing page with all parameters
       navigate(`/housing?${params.toString()}`);
     }
   };
@@ -126,7 +120,6 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
       isScrolled ? "bg-white/90 dark:bg-[#151C2E]/90 backdrop-blur shadow-md py-3" : "bg-transparent py-4"
     )}>
       <div className="container mx-auto flex items-center justify-between px-4">
-        {/* Logo */}
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
             <div className="bg-[#E56717] rounded-lg p-2 mr-2">
@@ -141,7 +134,6 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
           </Link>
         </div>
         
-        {/* Navigation */}
         <NavigationMenu>
           <NavigationMenuList className="gap-1">
             <NavigationMenuItem>
@@ -184,7 +176,6 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
                       </Button>
                     </div>
                     
-                    {/* Advanced Search Options */}
                     <Collapsible open={showAdvancedSearch} onOpenChange={setShowAdvancedSearch}>
                       <CollapsibleContent className="p-4 space-y-4 border-b">
                         <div>
@@ -276,7 +267,7 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
                       Profile
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuContent align="end" className="w-60">
                     <DropdownMenuLabel className="flex items-center gap-2">
                       <Avatar className="h-8 w-8">
                         <AvatarImage src={user.user_metadata?.avatar_url} />
@@ -288,15 +279,79 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <Link to="/list-property">
-                      <DropdownMenuItem>
-                        List Property
-                      </DropdownMenuItem>
-                    </Link>
+                    
+                    <DropdownMenuItem>
+                      <Newspaper className="mr-2 h-4 w-4 text-muted-foreground" />
+                      Subscribe now
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem>
+                      <User className="mr-2 h-4 w-4 text-muted-foreground" />
+                      My profile
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem>
+                      <Building className="mr-2 h-4 w-4 text-muted-foreground" />
+                      My adverts
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem>
+                      <Search className="mr-2 h-4 w-4 text-muted-foreground" />
+                      Searching for a room
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem>
+                      <Users className="mr-2 h-4 w-4 text-muted-foreground" />
+                      Searching for a tenant
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem>
+                      <Coins className="mr-2 h-4 w-4 text-muted-foreground" />
+                      Cashback & discounts
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem>
+                      <UserCircle className="mr-2 h-4 w-4 text-muted-foreground" />
+                      My account
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem>
+                      <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
+                      Settings
+                    </DropdownMenuItem>
+                    
                     <DropdownMenuSeparator />
+                    
+                    <DropdownMenuItem>
+                      <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
+                      How does it work?
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem>
+                      <Info className="mr-2 h-4 w-4 text-muted-foreground" />
+                      About StanCro
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem>
+                      <ShieldCheck className="mr-2 h-4 w-4 text-muted-foreground" />
+                      Safety
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem>
+                      <Lightbulb className="mr-2 h-4 w-4 text-muted-foreground" />
+                      Useful tips
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem>
+                      <HelpCircle className="mr-2 h-4 w-4 text-muted-foreground" />
+                      Support
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuSeparator />
+                    
                     <DropdownMenuItem onClick={handleSignOut}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Sign Out
+                      <LogOut className="mr-2 h-4 w-4 text-muted-foreground" />
+                      Log out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
