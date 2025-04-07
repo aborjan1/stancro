@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   NavigationMenu,
   NavigationMenuContent,
@@ -20,11 +20,15 @@ const Navbar = ({ onSearch }: { onSearch?: (searchTerm: string) => void }) => {
   const scrollPosition = useScrollPosition();
   const isScrolled = scrollPosition > 10;
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
   
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (onSearch) {
       onSearch(searchTerm);
+    } else {
+      // If no onSearch prop is provided, navigate to housing page with search term
+      navigate(`/housing?search=${encodeURIComponent(searchTerm)}`);
     }
   };
   

@@ -1,12 +1,20 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Building, Bath, BedDouble, Ruler } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Navbar from '@/components/Navbar';
 
 const Housing = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchParams] = useSearchParams();
+  const initialSearchTerm = searchParams.get('search') || '';
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
+  
+  // Update search term if URL parameters change
+  useEffect(() => {
+    setSearchTerm(searchParams.get('search') || '');
+  }, [searchParams]);
   
   // Mock data for recently listed housing
   const recentHousing = [

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,7 @@ import CitiesCarousel from "@/components/CitiesCarousel";
 import Navbar from "@/components/Navbar";
 
 const Index = () => {
+  const navigate = useNavigate();
   const cityImages = [
     {
       url: "/lovable-uploads/fc5d8e4b-854f-4734-96e0-59abf743630e.png",
@@ -39,6 +41,10 @@ const Index = () => {
 
     return () => clearInterval(interval);
   }, [cityImages.length]);
+
+  const handleSearch = (searchTerm: string) => {
+    navigate(`/housing?search=${encodeURIComponent(searchTerm)}`);
+  };
 
   const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -74,7 +80,7 @@ const Index = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
-      <Navbar />
+      <Navbar onSearch={handleSearch} />
 
       {/* Hero Section with fading images */}
       <header className="relative h-[90vh] w-full overflow-hidden">
