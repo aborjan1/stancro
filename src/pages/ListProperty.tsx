@@ -75,7 +75,7 @@ const ListProperty = () => {
       setIsSubmitting(true);
       
       // Create the listing in the database
-      const { error } = await supabase
+      const { data: insertedData, error } = await supabase
         .from('listings')
         .insert({
           title: data.title,
@@ -89,7 +89,8 @@ const ListProperty = () => {
           location: data.location,
           images: data.images,
           owner_id: user.id
-        });
+        })
+        .select();
       
       if (error) throw error;
       
@@ -100,6 +101,7 @@ const ListProperty = () => {
       // Redirect to homepage after successful submission
       navigate("/");
     } catch (error: any) {
+      console.error("Submission error:", error);
       toast.error("Failed to submit your property listing", {
         description: error.message || "Please try again later.",
       });
