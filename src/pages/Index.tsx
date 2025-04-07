@@ -41,82 +41,44 @@ const Index = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <header className="relative bg-gradient-to-r from-primary/80 to-primary overflow-hidden">
-        {/* Background image grid */}
-        <div className="absolute inset-0 z-0 grid grid-cols-2 gap-2 opacity-20">
-          <div className="col-span-1 h-full">
-            <img 
-              src="https://images.unsplash.com/photo-1551038247-3d9af20df552" 
-              alt="Croatian architecture" 
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="col-span-1 grid grid-rows-2 gap-2 h-full">
-            <div>
-              <img 
-                src="https://images.unsplash.com/photo-1487958449943-2429e8be8625" 
-                alt="Student apartment" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div>
-              <img 
-                src="https://images.unsplash.com/photo-1472396961693-142e6e269027" 
-                alt="Croatia landscape" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        </div>
-        
-        {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/80 z-10"></div>
-        
-        {/* Hero content */}
-        <div className="relative z-20 py-16 md:py-24">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-center justify-between">
-              <div className="md:w-1/2 mb-8 md:mb-0">
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                  Finding student housing in Croatia made simple
-                </h1>
-                <p className="text-xl text-white/90 mb-8">
-                  StanCro connects students with verified landlords on a single platform, making housing search easier and safer.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="bg-white text-primary hover:bg-white/90">
-                    Find Housing
-                  </Button>
-                  <Button 
-                    size="lg" 
-                    className="bg-orange-500 text-white border-2 border-white hover:bg-orange-600 transition-colors shadow-lg animate-pulse"
-                  >
-                    List Your Property
-                  </Button>
-                </div>
+      {/* Hero Section - Updated to match the uploaded image */}
+      <header className="relative bg-[#151C2E] overflow-hidden">
+        <div className="container mx-auto px-4 py-16 md:py-24">
+          <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="md:w-1/2 mb-8 md:mb-0">
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                Finding student housing in Croatia made simple
+              </h1>
+              <p className="text-xl text-white/90 mb-8">
+                StanCro connects students with verified landlords on a single platform, making housing search easier and safer.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" className="bg-white text-[#151C2E] hover:bg-white/90">
+                  Find Housing
+                </Button>
+                <Button 
+                  size="lg" 
+                  className="bg-[#E56717] text-white hover:bg-[#E56717]/90 transition-colors"
+                >
+                  List Your Property
+                </Button>
               </div>
-              <div className="md:w-5/12">
-                <div className="relative">
-                  {/* Main app preview - Updated to show Zagreb */}
-                  <div className="bg-white p-4 rounded-lg shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-300">
-                    <img 
-                      src="https://images.unsplash.com/photo-1541232484988-44a4147ad6c0?q=80&w=1000&auto=format&fit=crop" 
-                      alt="Zagreb City View" 
-                      className="rounded-md w-full"
-                    />
-                  </div>
-                  
-                  {/* Floating elements */}
-                  <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-orange-500 rounded-lg shadow-lg transform -rotate-6 flex items-center justify-center animate-bounce">
-                    <Home className="h-12 w-12 text-white" />
-                  </div>
-                  
-                  <div className="absolute -top-8 -right-4 bg-white p-3 rounded-full shadow-xl">
-                    <div className="bg-green-500 h-16 w-16 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xl font-bold">100+</span>
-                    </div>
-                  </div>
+            </div>
+            <div className="md:w-5/12">
+              <div className="relative flex items-center">
+                {/* App logo/icon in orange square */}
+                <div className="bg-[#E56717] rounded-lg p-4 mb-4 mr-4">
+                  <Home className="h-12 w-12 text-white" />
+                </div>
+                
+                {/* Badge with 100+ */}
+                <div className="absolute top-0 right-0 bg-green-500 h-16 w-16 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xl font-bold">100+</span>
+                </div>
+                
+                {/* City name */}
+                <div className="text-white ml-2">
+                  <p>Zagreb City View</p>
                 </div>
               </div>
             </div>
@@ -126,7 +88,7 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="flex-grow">
-        {/* Cities Carousel - NEW SECTION */}
+        {/* Cities Carousel */}
         <CitiesCarousel />
         
         {/* Features Section */}
