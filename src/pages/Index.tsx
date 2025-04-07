@@ -57,7 +57,10 @@ const Index = () => {
                 <Button size="lg" className="bg-white text-primary hover:bg-white/90">
                   Find Housing
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-primary/20">
+                <Button 
+                  size="lg" 
+                  className="bg-orange-500 text-white border-2 border-white hover:bg-orange-600 transition-colors shadow-lg animate-pulse"
+                >
                   List Your Property
                 </Button>
               </div>
