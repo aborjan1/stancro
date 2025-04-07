@@ -20,16 +20,19 @@ interface ListingsSectionProps {
   listings: Listing[] | undefined;
   isLoading: boolean;
   error: Error | null;
+  searchTerm?: string;
 }
 
-const ListingsSection = ({ listings, isLoading, error }: ListingsSectionProps) => {
+const ListingsSection = ({ listings, isLoading, error, searchTerm }: ListingsSectionProps) => {
   return (
     <section className="py-10 bg-gray-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold">
             {isLoading ? "Loading listings..." : 
-              listings && listings.length > 0 ? `${listings.length} Results Found` : "No Listings Found"}
+              listings && listings.length > 0 
+                ? `${listings.length} Results Found${searchTerm ? ` in ${searchTerm}` : ''}` 
+                : `No Listings Found${searchTerm ? ` in ${searchTerm}` : ''}`}
           </h2>
           
           {/* Debug information for development */}

@@ -27,7 +27,7 @@ const Housing = () => {
   // Initialize filter states from URL parameters
   const [filters, setFilters] = useState<FilterOptions>({
     priceRange: [
-      Number(searchParams.get('minPrice')) || 200,
+      Number(searchParams.get('minPrice')) || 0,
       Number(searchParams.get('maxPrice')) || 900
     ],
     propertyTypes: searchParams.get('types')?.split(',') || [],
@@ -42,7 +42,7 @@ const Housing = () => {
     setSearchTerm(searchParams.get('search') || '');
     setFilters({
       priceRange: [
-        Number(searchParams.get('minPrice')) || filters.priceRange[0],
+        Number(searchParams.get('minPrice')) || 0,
         Number(searchParams.get('maxPrice')) || filters.priceRange[1]
       ],
       propertyTypes: searchParams.get('types')?.split(',') || filters.propertyTypes,
@@ -74,6 +74,7 @@ const Housing = () => {
         listings={listings} 
         isLoading={isLoading} 
         error={error} 
+        searchTerm={searchTerm}
       />
     </div>
   );

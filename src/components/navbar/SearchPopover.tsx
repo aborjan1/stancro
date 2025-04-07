@@ -31,7 +31,7 @@ const SearchPopover: React.FC<SearchPopoverProps> = ({ onSearch, isScrolled }) =
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
-  const [priceRange, setPriceRange] = useState<[number, number]>([200, 900]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 900]);
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState<string[]>([]);
   const [bedrooms, setBedrooms] = useState<number | null>(null);
   const [bathrooms, setBathrooms] = useState<number | null>(null);
@@ -85,7 +85,7 @@ const SearchPopover: React.FC<SearchPopoverProps> = ({ onSearch, isScrolled }) =
   };
   
   const resetFilters = () => {
-    setPriceRange([200, 900]);
+    setPriceRange([0, 900]);
     setSelectedPropertyTypes([]);
     setBedrooms(null);
     setBathrooms(null);
@@ -129,7 +129,7 @@ const SearchPopover: React.FC<SearchPopoverProps> = ({ onSearch, isScrolled }) =
                 <h4 className="mb-2 text-sm font-medium">Price Range: €{priceRange[0]} - €{priceRange[1]}</h4>
                 <Slider 
                   defaultValue={[priceRange[0], priceRange[1]]} 
-                  min={100} 
+                  min={0} 
                   max={1500} 
                   step={50}
                   onValueChange={(value) => setPriceRange([value[0], value[1]])}

@@ -37,31 +37,40 @@ export const useListings = (searchTerm: string, filters: FilterOptions) => {
           .from('listings')
           .select('*');
         
-        // Apply filters
+        // Apply location filter (prioritize this filter)
         if (searchTerm) {
-          console.log("Applying search term filter:", searchTerm);
+          console.log("Applying search term filter for location:", searchTerm);
           query = query.ilike('location', `%${searchTerm}%`);
         }
         
+        // Apply property type filter
         if (filters.propertyTypes.length > 0) {
           console.log("Applying property types filter:", filters.propertyTypes);
           query = query.in('property_type', filters.propertyTypes);
         }
         
+        // Apply bedrooms filter
         if (filters.bedrooms !== null) {
           console.log("Applying bedrooms filter:", filters.bedrooms);
           query = query.gte('beds', filters.bedrooms);
         }
         
+        // Apply bathrooms filter
         if (filters.bathrooms !== null) {
           console.log("Applying bathrooms filter:", filters.bathrooms);
           query = query.gte('baths', filters.bathrooms);
         }
         
-        console.log("Applying price range filter:", filters.priceRange);
-        query = query
-          .gte('price', filters.priceRange[0])
-          .lte('price', filters.priceRange[1]);
+        // Only apply price range filter if minimum is greater than 0 or maximum is less than a high value
+        if (filters.priceRange[0] > 0) {
+          console.log("Applying minimum price filter:", filters.priceRange[0]);
+          query = query.gte('price', filters.priceRange[0]);
+        }
+        
+        if (filters.priceRange[1] < 1000) {
+          console.log("Applying maximum price filter:", filters.priceRange[1]);
+          query = query.lte('price', filters.priceRange[1]);
+        }
         
         const { data, error } = await query;
         
@@ -81,6 +90,15 @@ export const useListings = (searchTerm: string, filters: FilterOptions) => {
             console.error("Supabase error on simple query:", allError);
           } else {
             console.log("All listings (up to 10):", allData);
+            
+            // If there are listings but not matching our filters, show a helpful toast
+            if (allData && allData.length > 0) {
+              toast({
+                title: "No matches found",
+                description: "We have listings, but none match your current filters. Try adjusting your search criteria.",
+                variant: "default"
+              });
+            }
           }
         }
         
