@@ -77,10 +77,9 @@ const Housing = () => {
     queryKey: ['listings', searchTerm, filters],
     queryFn: async () => {
       try {
-        // Type assertion to fix the TypeScript error
         let query = supabase
           .from('listings')
-          .select('*') as any;
+          .select('*');
         
         // Apply filters
         if (searchTerm) {
@@ -110,7 +109,7 @@ const Housing = () => {
         }
         
         return data as Listing[];
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching listings:", error);
         toast({
           title: "Error",
@@ -126,9 +125,6 @@ const Housing = () => {
     setSearchTerm(searchParams.searchTerm);
     setFilters(searchParams.filters);
   };
-
-  // Use real data if available, otherwise show placeholder message
-  const filteredListings = listings || [];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -181,7 +177,7 @@ const Housing = () => {
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold">
               {isLoading ? "Loading listings..." : 
-                filteredListings.length > 0 ? `${filteredListings.length} Results Found` : "No Listings Found"}
+                listings && listings.length > 0 ? `${listings.length} Results Found` : "No Listings Found"}
             </h2>
           </div>
           
@@ -191,12 +187,12 @@ const Housing = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredListings.length > 0 ? (
-                filteredListings.map((listing) => (
+              {listings && listings.length > 0 ? (
+                listings.map((listing) => (
                   <Card key={listing.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                     <div className="relative aspect-video w-full overflow-hidden">
                       <img 
-                        src={listing.images[0] || "/placeholder.svg"} 
+                        src={listing.images && listing.images.length > 0 ? listing.images[0] : "/placeholder.svg"} 
                         alt={listing.title}
                         className="w-full h-full object-cover"
                       />
@@ -209,7 +205,11 @@ const Housing = () => {
                       <CardDescription className="text-muted-foreground">{listing.location}</CardDescription>
                     </CardHeader>
                     <CardContent className="pb-2">
-                      <p className="text-sm text-muted-foreground mb-3">{listing.description}</p>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        {listing.description && listing.description.length > 100 
+                          ? `${listing.description.substring(0, 100)}...` 
+                          : listing.description}
+                      </p>
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center">
                           <BedDouble className="h-4 w-4 mr-1" />
@@ -221,7 +221,7 @@ const Housing = () => {
                         </div>
                         <div className="flex items-center">
                           <Ruler className="h-4 w-4 mr-1" />
-                          <span>{listing.area}</span>
+                          <span>{listing.area || 'N/A'}</span>
                         </div>
                         <div className="flex items-center">
                           <Building className="h-4 w-4 mr-1" />
@@ -249,15 +249,13 @@ const Housing = () => {
             </div>
           )}
           
-          {filteredListings.length > 0 && (
+          {listings && listings.length > 0 && (
             <div className="flex justify-center mt-10">
               <Button variant="outline">Load More</Button>
             </div>
           )}
         </div>
       </section>
-
-      {/* Footer section removed as it's included in App.tsx */}
     </div>
   );
 };
