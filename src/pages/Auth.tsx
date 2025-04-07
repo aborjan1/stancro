@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -9,12 +9,38 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from "@/components/ui/use-toast";
 import Navbar from '@/components/Navbar';
 import { User, KeyRound, Mail, EyeOff, Eye } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState("login");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        navigate('/');
+      }
+    };
+    
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (session) {
+          navigate('/');
+        }
+      }
+    );
+
+    checkSession();
+    
+    // Cleanup the subscription when component unmounts
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   // Login form state
   const [loginForm, setLoginForm] = useState({
@@ -30,18 +56,56 @@ const Auth = () => {
     confirmPassword: '',
   });
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // For now, just show a toast since we don't have Supabase integration yet
-    toast({
-      title: "Login functionality requires Supabase",
-      description: "Please connect Supabase to enable authentication.",
-    });
+    if (!loginForm.email || !loginForm.password) {
+      toast({
+        title: "Missing fields",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: loginForm.email,
+        password: loginForm.password,
+      });
+      
+      if (error) throw error;
+      
+      // Success - user will be redirected by the auth state listener
+      toast({
+        title: "Login successful",
+        description: "Welcome back!",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Login failed",
+        description: error.message || "An error occurred during login.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleRegisterSubmit = (e: React.FormEvent) => {
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form fields
+    if (!registerForm.username || !registerForm.email || !registerForm.password) {
+      toast({
+        title: "Missing fields",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
     
     // Validate passwords match
     if (registerForm.password !== registerForm.confirmPassword) {
@@ -53,11 +117,38 @@ const Auth = () => {
       return;
     }
     
-    // For now, just show a toast since we don't have Supabase integration yet
-    toast({
-      title: "Registration functionality requires Supabase",
-      description: "Please connect Supabase to enable authentication.",
-    });
+    try {
+      setLoading(true);
+      
+      // Register the user with Supabase
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ 
+        email: registerForm.email,
+        password: registerForm.password,
+        options: {
+          data: {
+            username: registerForm.username,
+            full_name: registerForm.username, // Using username as full_name for now
+          }
+        }
+      });
+      
+      if (signUpError) throw signUpError;
+      
+      toast({
+        title: "Registration successful",
+        description: "Your account has been created! You are now logged in.",
+      });
+      
+      // User will be redirected by the auth state listener
+    } catch (error: any) {
+      toast({
+        title: "Registration failed",
+        description: error.message || "An error occurred during registration.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -127,7 +218,9 @@ const Auth = () => {
                         </div>
                       </div>
                       
-                      <Button type="submit" className="w-full">Sign In</Button>
+                      <Button type="submit" className="w-full" disabled={loading}>
+                        {loading ? "Signing in..." : "Sign In"}
+                      </Button>
                     </form>
                   </CardContent>
                   <CardFooter className="flex flex-col">
@@ -221,7 +314,9 @@ const Auth = () => {
                         </div>
                       </div>
                       
-                      <Button type="submit" className="w-full">Register</Button>
+                      <Button type="submit" className="w-full" disabled={loading}>
+                        {loading ? "Creating account..." : "Register"}
+                      </Button>
                     </form>
                   </CardContent>
                   <CardFooter className="flex flex-col">

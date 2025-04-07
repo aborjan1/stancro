@@ -1,1 +1,5 @@
+
 project_id = "epggnqqnymxxkrvexpua"
+
+[functions]
+profile_sync_enabled = true
