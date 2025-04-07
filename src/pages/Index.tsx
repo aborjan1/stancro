@@ -264,7 +264,7 @@ const Index = () => {
       
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <p className="text-center text-gray-600 mb-12">Find student housing in Croatia's most popular university destinations</p>
+          <p className="text-center text-gray-600 mb-12"></p>
           
           <CitiesCarousel />
         </div>
