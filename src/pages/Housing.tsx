@@ -1,10 +1,13 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Building, Bath, BedDouble, Ruler } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Navbar from '@/components/Navbar';
 
 const Housing = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  
   // Mock data for recently listed housing
   const recentHousing = [
     {
@@ -81,10 +84,21 @@ const Housing = () => {
     }
   ];
 
+  // Filter housing listings based on search term
+  const filteredHousing = searchTerm 
+    ? recentHousing.filter(housing => 
+        housing.location.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : recentHousing;
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Navbar */}
-      <Navbar />
+      {/* Navbar with search capability */}
+      <Navbar onSearch={handleSearch} />
 
       {/* Hero section */}
       <section className="pt-28 pb-10 bg-gradient-to-b from-[#151C2E] to-[#1E293B]">
@@ -95,6 +109,11 @@ const Housing = () => {
           <p className="text-xl text-white/90 mb-4">
             Browse our latest listings specifically tailored for students in Croatia
           </p>
+          {searchTerm && (
+            <p className="text-white/80 italic">
+              Showing results for: "{searchTerm}"
+            </p>
+          )}
         </div>
       </section>
 
@@ -102,7 +121,9 @@ const Housing = () => {
       <section className="py-10 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold">Recent Listings</h2>
+            <h2 className="text-2xl font-bold">
+              {searchTerm ? `Search Results` : `Recent Listings`}
+            </h2>
             <div className="flex items-center space-x-2">
               <Button variant="outline" size="sm">
                 Filter
@@ -114,55 +135,70 @@ const Housing = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recentHousing.map((housing) => (
-              <Card key={housing.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="relative aspect-video w-full overflow-hidden">
-                  <img 
-                    src={housing.image} 
-                    alt={housing.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-2 right-2 bg-[#E56717] text-white px-2 py-1 rounded text-sm font-medium">
-                    {housing.price}
-                  </div>
-                </div>
-                <CardHeader className="pb-2">
-                  <CardTitle>{housing.title}</CardTitle>
-                  <CardDescription className="text-muted-foreground">{housing.location}</CardDescription>
-                </CardHeader>
-                <CardContent className="pb-2">
-                  <p className="text-sm text-muted-foreground mb-3">{housing.description}</p>
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center">
-                      <BedDouble className="h-4 w-4 mr-1" />
-                      <span>{housing.beds} {housing.beds === 1 ? 'bed' : 'beds'}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Bath className="h-4 w-4 mr-1" />
-                      <span>{typeof housing.baths === 'number' 
-                        ? `${housing.baths} ${housing.baths === 1 ? 'bath' : 'baths'}`
-                        : housing.baths}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Ruler className="h-4 w-4 mr-1" />
-                      <span>{housing.area}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Building className="h-4 w-4 mr-1" />
-                      <span>{housing.type}</span>
+            {filteredHousing.length > 0 ? (
+              filteredHousing.map((housing) => (
+                <Card key={housing.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="relative aspect-video w-full overflow-hidden">
+                    <img 
+                      src={housing.image} 
+                      alt={housing.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 right-2 bg-[#E56717] text-white px-2 py-1 rounded text-sm font-medium">
+                      {housing.price}
                     </div>
                   </div>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full">View Details</Button>
-                </CardFooter>
-              </Card>
-            ))}
+                  <CardHeader className="pb-2">
+                    <CardTitle>{housing.title}</CardTitle>
+                    <CardDescription className="text-muted-foreground">{housing.location}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="pb-2">
+                    <p className="text-sm text-muted-foreground mb-3">{housing.description}</p>
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center">
+                        <BedDouble className="h-4 w-4 mr-1" />
+                        <span>{housing.beds} {housing.beds === 1 ? 'bed' : 'beds'}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Bath className="h-4 w-4 mr-1" />
+                        <span>{typeof housing.baths === 'number' 
+                          ? `${housing.baths} ${housing.baths === 1 ? 'bath' : 'baths'}`
+                          : housing.baths}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Ruler className="h-4 w-4 mr-1" />
+                        <span>{housing.area}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Building className="h-4 w-4 mr-1" />
+                        <span>{housing.type}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button className="w-full">View Details</Button>
+                  </CardFooter>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-1 md:col-span-2 lg:col-span-3 py-8 text-center">
+                <p className="text-lg text-gray-500">No housing found for "{searchTerm}". Try another city.</p>
+                <Button 
+                  variant="outline" 
+                  className="mt-4"
+                  onClick={() => setSearchTerm("")}
+                >
+                  Clear Search
+                </Button>
+              </div>
+            )}
           </div>
           
-          <div className="flex justify-center mt-10">
-            <Button variant="outline">Load More</Button>
-          </div>
+          {filteredHousing.length > 0 && (
+            <div className="flex justify-center mt-10">
+              <Button variant="outline">Load More</Button>
+            </div>
+          )}
         </div>
       </section>
 

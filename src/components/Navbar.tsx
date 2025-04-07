@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { 
   NavigationMenu,
@@ -11,12 +11,22 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Home, Search, Filter, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 
-const Navbar = () => {
+const Navbar = ({ onSearch }: { onSearch?: (searchTerm: string) => void }) => {
   const scrollPosition = useScrollPosition();
   const isScrolled = scrollPosition > 10;
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (onSearch) {
+      onSearch(searchTerm);
+    }
+  };
   
   return (
     <header className={cn(
@@ -51,35 +61,28 @@ const Navbar = () => {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className={!isScrolled ? "bg-white/20 text-white hover:bg-white/30" : ""}>
-                <Search className="mr-1 h-4 w-4" />
-                Search
-              </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <div className="w-[320px] p-4">
-                  <div className="flex items-center">
-                    <Filter className="h-5 w-5 mr-2" />
-                    <span className="font-medium">Filters</span>
-                  </div>
-                  <div className="grid gap-3 mt-3">
-                    <div className="row-span-3">
-                      <NavigationMenuLink asChild>
-                        <Link
-                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-4 no-underline outline-none focus:shadow-md"
-                          to="/housing"
-                        >
-                          <div className="mb-2 mt-4 text-lg font-medium">
-                            Find Housing
-                          </div>
-                          <p className="text-sm leading-tight text-muted-foreground">
-                            Search through verified housing options in Croatia.
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </div>
-                  </div>
-                </div>
-              </NavigationMenuContent>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant={isScrolled ? "ghost" : "outline"} className={!isScrolled ? "bg-white/20 text-white hover:bg-white/30" : ""}>
+                    <Search className="mr-1 h-4 w-4" />
+                    Search
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 p-0">
+                  <form onSubmit={handleSearch} className="flex items-center p-4">
+                    <Input
+                      type="text"
+                      placeholder="Search by city..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="flex-1"
+                    />
+                    <Button type="submit" size="sm" className="ml-2">
+                      <Search className="h-4 w-4" />
+                    </Button>
+                  </form>
+                </PopoverContent>
+              </Popover>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <Link to="/about">
