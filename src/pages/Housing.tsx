@@ -136,11 +136,13 @@ const Housing = () => {
                   <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center">
                       <BedDouble className="h-4 w-4 mr-1" />
-                      <span>{housing.beds} {housing.beds > 1 ? 'beds' : 'bed'}</span>
+                      <span>{housing.beds} {housing.beds === 1 ? 'bed' : 'beds'}</span>
                     </div>
                     <div className="flex items-center">
                       <Bath className="h-4 w-4 mr-1" />
-                      <span>{housing.baths} {housing.baths > 1 ? 'baths' : 'bath'}</span>
+                      <span>{typeof housing.baths === 'number' 
+                        ? `${housing.baths} ${housing.baths === 1 ? 'bath' : 'baths'}`
+                        : housing.baths}</span>
                     </div>
                     <div className="flex items-center">
                       <Ruler className="h-4 w-4 mr-1" />
