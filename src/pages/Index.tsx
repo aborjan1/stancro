@@ -79,7 +79,7 @@ const Index = () => {
                 
                 {/* City name */}
                 <div className="text-white ml-2">
-                  <p>Zagreb City View</p>
+                  <p><img src="https://en.wikipedia.org/wiki/Zagreb"></img>Zagreb City View</p>
                 </div>
               </div>
             </div>
