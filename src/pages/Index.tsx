@@ -84,7 +84,6 @@ const Index = () => {
                       alt="Zagreb Cathedral and city view"
                       className="rounded-lg max-w-full h-auto"
                     />
-                    Zagreb City View
                   </p>
                 </div>
               </div>
