@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import ListingDetail from "./pages/ListingDetail";
 import Footer from "./components/Footer";
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
             <Route path="/housing" element={<Housing />} />
+            <Route path="/housing/listing/:id" element={<ListingDetail />} />
             <Route path="/list-property" element={<ListProperty />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/profile" element={<Profile />} />
