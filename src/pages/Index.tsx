@@ -1,15 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Home, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import CitiesCarousel from "@/components/CitiesCarousel";
 import Navbar from "@/components/Navbar";
 
-// Interface for search filters
 interface FilterOptions {
   priceRange: [number, number];
   propertyTypes: string[];
@@ -66,7 +64,6 @@ const Index = () => {
   const handleSearch = (searchParams: SearchParams) => {
     const { searchTerm, filters } = searchParams;
     
-    // Build URL parameters
     const params = new URLSearchParams();
     params.set('search', searchTerm);
     
@@ -80,13 +77,11 @@ const Index = () => {
     if (filters.bedrooms !== null) params.set('beds', filters.bedrooms.toString());
     if (filters.bathrooms !== null) params.set('baths', filters.bathrooms.toString());
     
-    // Navigate to housing page with search parameters
     navigate(`/housing?${params.toString()}`);
   };
 
   const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Subscription logic would go here
     console.log("Subscribed to newsletter");
   };
   
@@ -94,10 +89,8 @@ const Index = () => {
   
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Navbar */}
       <Navbar onSearch={handleSearch} />
 
-      {/* Hero Section with fading images */}
       <header className="relative h-[90vh] w-full overflow-hidden">
         <div 
           className={cn(
@@ -123,12 +116,10 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Features Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Why Choose StanCro?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
             <Card>
               <CardHeader>
                 <CardTitle>Verified Student Housing</CardTitle>
@@ -138,7 +129,6 @@ const Index = () => {
               </CardContent>
             </Card>
             
-            {/* Feature 2 */}
             <Card>
               <CardHeader>
                 <CardTitle>Budget-Friendly Options</CardTitle>
@@ -148,7 +138,6 @@ const Index = () => {
               </CardContent>
             </Card>
             
-            {/* Feature 3 */}
             <Card>
               <CardHeader>
                 <CardTitle>Close to Universities</CardTitle>
@@ -161,17 +150,64 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Popular Cities Section */}
+      <section className="py-20 bg-[#F5F7FA]">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+            <div className="md:w-1/2 space-y-6">
+              <h2 className="text-3xl font-bold">List Your Property on StanCro</h2>
+              <p className="text-lg text-gray-600">
+                Are you a property owner with housing suitable for students? Join our platform and connect with thousands of students looking for their next home.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-[#E56717] mt-1" />
+                  <div>
+                    <h3 className="font-medium text-lg">Reach More Students</h3>
+                    <p className="text-gray-600">Connect with the largest pool of student renters in Croatia.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-[#E56717] mt-1" />
+                  <div>
+                    <h3 className="font-medium text-lg">Easy Management</h3>
+                    <p className="text-gray-600">Manage bookings, communicate with tenants, and track payments all in one place.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-[#E56717] mt-1" />
+                  <div>
+                    <h3 className="font-medium text-lg">Verified Tenants</h3>
+                    <p className="text-gray-600">All student profiles are verified, providing peace of mind for landlords.</p>
+                  </div>
+                </div>
+              </div>
+              <Button className="bg-[#E56717] hover:bg-[#d05c13] text-white">
+                List Your Property
+                <Home className="ml-2 h-5 w-5" />
+              </Button>
+            </div>
+            <div className="md:w-1/2">
+              <div className="rounded-lg overflow-hidden shadow-xl">
+                <img 
+                  src="/placeholder.svg" 
+                  alt="List your property" 
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-4">Popular Student Cities</h2>
-          <p className="text-center text-gray-600 mb-12">Explore housing options in Croatia's top student destinations</p>
+          <h2 className="text-3xl font-bold text-center mb-4">Discover Croatian Cities</h2>
+          <p className="text-center text-gray-600 mb-12">How StanCro works</p>
           
           <CitiesCarousel />
         </div>
       </section>
       
-      {/* Newsletter Section */}
       <section className="py-20 bg-[#151C2E] text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
@@ -191,7 +227,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Footer */}
       <footer className="bg-gray-900 text-white py-6">
         <div className="container mx-auto px-4">
           <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center">
