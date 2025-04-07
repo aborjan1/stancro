@@ -9,6 +9,8 @@ import About from "./pages/About";
 import Housing from "./pages/Housing";
 import ListProperty from "./pages/ListProperty";
 import NotFound from "./pages/NotFound";
+import Auth from "./pages/Auth";
+import Footer from "./components/Footer";
 
 const queryClient = new QueryClient();
 
@@ -23,9 +25,11 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/housing" element={<Housing />} />
           <Route path="/list-property" element={<ListProperty />} />
+          <Route path="/auth" element={<Auth />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

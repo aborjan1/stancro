@@ -9,7 +9,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Home, Search, Filter, Info, SlidersHorizontal } from "lucide-react";
+import { Home, Search, Filter, Info, SlidersHorizontal, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -252,10 +252,10 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
               </Popover>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link to="/about">
+              <Link to="/auth">
                 <Button variant={isScrolled ? "ghost" : "outline"} className={!isScrolled ? "bg-white/20 text-white hover:bg-white/30" : ""}>
-                  <Info className="mr-1 h-4 w-4" />
-                  About Us
+                  <LogIn className="mr-1 h-4 w-4" />
+                  Login / Register
                 </Button>
               </Link>
             </NavigationMenuItem>
