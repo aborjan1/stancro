@@ -1,43 +1,10 @@
-
-import React, { useState, useEffect } from 'react';
-import { Building, Bath, BedDouble, Ruler, Home } from 'lucide-react';
+import React from 'react';
+import { Building, Bath, BedDouble, Ruler } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Navbar from '@/components/Navbar';
 
 const Housing = () => {
-  // City images for the slideshow
-  const cityImages = [
-    {
-      url: "/lovable-uploads/fc5d8e4b-854f-4734-96e0-59abf743630e.png",
-      caption: "Zagreb"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb",
-      caption: "Split"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05",
-      caption: "Rijeka"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1470813740244-df37b8c1edcb",
-      caption: "Dubrovnik"
-    }
-  ];
-
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => 
-        prevIndex === cityImages.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [cityImages.length]);
-
   // Mock data for recently listed housing
   const recentHousing = [
     {
@@ -119,33 +86,14 @@ const Housing = () => {
       {/* Navbar */}
       <Navbar />
 
-      {/* Hero section with fading images */}
-      <section className="relative h-[60vh] overflow-hidden">
-        {/* Background images with fade transition */}
-        {cityImages.map((image, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out bg-cover bg-center bg-no-repeat`}
-            style={{
-              backgroundImage: `url(${image.url})`,
-              opacity: index === currentImageIndex ? 1 : 0,
-            }}
-          >
-            {/* Overlay for better text readability */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#151C2E]/80 to-[#1E293B]/80"></div>
-          </div>
-        ))}
-
-        {/* Centered content */}
-        <div className="container mx-auto px-4 h-full flex flex-col items-center justify-center relative z-10">
-          <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 text-center">
+      {/* Hero section */}
+      <section className="pt-28 pb-10 bg-gradient-to-b from-[#151C2E] to-[#1E293B]">
+        <div className="container mx-auto px-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Find Your Perfect Student Housing
           </h1>
-          <p className="text-xl text-white/90 mb-4 text-center max-w-2xl">
+          <p className="text-xl text-white/90 mb-4">
             Browse our latest listings specifically tailored for students in Croatia
-          </p>
-          <p className="text-md text-white/70 italic">
-            {cityImages[currentImageIndex].caption}
           </p>
         </div>
       </section>

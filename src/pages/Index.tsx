@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,6 +9,37 @@ import CitiesCarousel from "@/components/CitiesCarousel";
 import Navbar from "@/components/Navbar";
 
 const Index = () => {
+  const cityImages = [
+    {
+      url: "/lovable-uploads/fc5d8e4b-854f-4734-96e0-59abf743630e.png",
+      caption: "Zagreb"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb",
+      caption: "Split"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05",
+      caption: "Rijeka"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1470813740244-df37b8c1edcb",
+      caption: "Dubrovnik"
+    }
+  ];
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === cityImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [cityImages.length]);
+
   const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     toast({
@@ -46,46 +76,46 @@ const Index = () => {
       {/* Navbar */}
       <Navbar />
 
-      {/* Hero Section - Full width */}
-      <header className="relative bg-[#151C2E] w-full overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-4 py-16 md:py-24 lg:py-32 h-[90vh] flex items-center">
-          <div className="flex flex-col md:flex-row items-center justify-between w-full">
-            <div className="md:w-1/2 mb-8 md:mb-0">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
-                Finding student housing in Croatia made simple
-              </h1>
-              <p className="text-xl text-white/90 mb-8">
-                StanCro connects students with verified landlords on a single platform, making housing search easier and safer.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/housing">
-                  <Button size="lg" className="bg-white text-[#151C2E] hover:bg-white/90">
-                    Find Housing
-                  </Button>
-                </Link>
-                <Button 
-                  size="lg" 
-                  className="bg-[#E56717] text-white hover:bg-[#E56717]/90 transition-colors"
-                >
-                  List Your Property
-                </Button>
-              </div>
-            </div>
-            <div className="md:w-5/12 relative">
-              {/* City image */}
-              <div className="relative">
-                <img 
-                  src="/lovable-uploads/fc5d8e4b-854f-4734-96e0-59abf743630e.png" 
-                  alt="Zagreb Cathedral and city view"
-                  className="rounded-lg max-w-full h-auto"
-                />
-              </div>
-              
-              {/* App logo in orange square - positioned to "stick out" at bottom left */}
-              <div className="absolute -bottom-6 -left-6 bg-[#E56717] rounded-lg p-4 shadow-lg">
-                <Home className="h-12 w-12 text-white" />
-              </div>
-            </div>
+      {/* Hero Section with fading images */}
+      <header className="relative h-[90vh] w-full overflow-hidden">
+        {/* Background images with fade transition */}
+        {cityImages.map((image, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out bg-cover bg-center bg-no-repeat`}
+            style={{
+              backgroundImage: `url(${image.url})`,
+              opacity: index === currentImageIndex ? 1 : 0,
+            }}
+          >
+            {/* Overlay for better text readability */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#151C2E]/80 to-[#1E293B]/80"></div>
+          </div>
+        ))}
+        
+        {/* Centered content */}
+        <div className="container mx-auto px-4 h-full flex flex-col items-center justify-center relative z-10">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 text-center">
+            Finding student housing in Croatia made simple
+          </h1>
+          <p className="text-xl text-white/90 mb-8 text-center max-w-2xl">
+            StanCro connects students with verified landlords on a single platform, making housing search easier and safer.
+          </p>
+          <p className="text-md text-white/70 italic mb-8">
+            {cityImages[currentImageIndex].caption}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link to="/housing">
+              <Button size="lg" className="bg-white text-[#151C2E] hover:bg-white/90">
+                Find Housing
+              </Button>
+            </Link>
+            <Button 
+              size="lg" 
+              className="bg-[#E56717] text-white hover:bg-[#E56717]/90 transition-colors"
+            >
+              List Your Property
+            </Button>
           </div>
         </div>
       </header>
