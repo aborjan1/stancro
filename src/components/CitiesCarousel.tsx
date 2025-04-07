@@ -8,37 +8,38 @@ import {
   CarouselPrevious 
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
+import { Home } from "lucide-react";
 
 const cities = [
   {
     name: "Zagreb",
     image: "https://images.unsplash.com/photo-1541232484988-44a4147ad6c0?q=80&w=1000&auto=format&fit=crop",
-    description: "Croatia's vibrant capital city with rich history and culture"
+    housingCount: 156
   },
   {
     name: "Split",
     image: "https://images.unsplash.com/photo-1555990793-da11153b2473?q=80&w=1000&auto=format&fit=crop",
-    description: "Coastal city famous for Diocletian's Palace and beautiful beaches"
+    housingCount: 89
   },
   {
     name: "Dubrovnik",
     image: "https://images.unsplash.com/photo-1522175279007-54cd987c196c?q=80&w=1000&auto=format&fit=crop",
-    description: "The 'Pearl of the Adriatic' with stunning medieval architecture"
+    housingCount: 64
   },
   {
     name: "Rijeka",
     image: "https://images.unsplash.com/photo-1565894098565-a8dd202b0ebe?q=80&w=1000&auto=format&fit=crop",
-    description: "Major port city and cultural hub in the northern Adriatic"
+    housingCount: 42
   },
   {
     name: "Osijek",
     image: "https://images.unsplash.com/photo-1618911752184-61790da33a39?q=80&w=1000&auto=format&fit=crop",
-    description: "Largest city in eastern Croatia on the banks of the Drava River"
+    housingCount: 38
   },
   {
     name: "Zadar",
     image: "https://images.unsplash.com/photo-1555990538-2237e72eef2c?q=80&w=1000&auto=format&fit=crop",
-    description: "Coastal city known for its Roman ruins and unique Sea Organ"
+    housingCount: 51
   }
 ];
 
@@ -73,7 +74,10 @@ const CitiesCarousel = () => {
                       />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
                         <h3 className="text-xl font-bold">{city.name}</h3>
-                        <p className="text-sm opacity-90">{city.description}</p>
+                        <div className="flex items-center mt-1">
+                          <Home className="h-4 w-4 mr-1" />
+                          <p className="text-sm font-medium">{city.housingCount} available accommodations</p>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
