@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,14 +16,19 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+  
+  // Get return path from location state if available
+  const returnPath = location.state?.returnPath || '/';
 
   // Check if user is already logged in
   useEffect(() => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        navigate('/');
+        // If returning from property listing, go back there
+        navigate(returnPath);
       }
     };
     
@@ -31,7 +36,8 @@ const Auth = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (session) {
-          navigate('/');
+          // If returning from property listing, go back there
+          navigate(returnPath);
         }
       }
     );
@@ -40,7 +46,7 @@ const Auth = () => {
     
     // Cleanup the subscription when component unmounts
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, returnPath]);
 
   // Login form state
   const [loginForm, setLoginForm] = useState({
@@ -168,7 +174,9 @@ const Auth = () => {
                   <CardHeader>
                     <CardTitle>Login to your account</CardTitle>
                     <CardDescription>
-                      Enter your email and password to access your account
+                      {returnPath !== '/' ? 
+                        "Log in to continue with your property listing" : 
+                        "Enter your email and password to access your account"}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
