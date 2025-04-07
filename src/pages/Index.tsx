@@ -6,6 +6,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Building, Home, Search, Shield, Star, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import CitiesCarousel from "@/components/CitiesCarousel";
+import Navbar from "@/components/Navbar";
 
 const Index = () => {
   const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
@@ -41,6 +42,9 @@ const Index = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Navbar */}
+      <Navbar />
+
       {/* Hero Section - Full width */}
       <header className="relative bg-[#151C2E] w-full overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-4 py-16 md:py-24 lg:py-32 h-[90vh] flex items-center">
@@ -64,28 +68,19 @@ const Index = () => {
                 </Button>
               </div>
             </div>
-            <div className="md:w-5/12">
-              <div className="relative flex items-center">
-                {/* App logo/icon in orange square */}
-                <div className="bg-[#E56717] rounded-lg p-4 mb-4 mr-4">
-                  <Home className="h-12 w-12 text-white" />
-                </div>
-                
-                {/* Badge with 100+ */}
-                <div className="absolute top-0 right-0 bg-green-500 h-16 w-16 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xl font-bold">100+</span>
-                </div>
-                
-                {/* City name with new Zagreb image */}
-                <div className="text-white ml-2">
-                  <p>
-                    <img 
-                      src="/lovable-uploads/fc5d8e4b-854f-4734-96e0-59abf743630e.png" 
-                      alt="Zagreb Cathedral and city view"
-                      className="rounded-lg max-w-full h-auto"
-                    />
-                  </p>
-                </div>
+            <div className="md:w-5/12 relative">
+              {/* City image */}
+              <div className="relative">
+                <img 
+                  src="/lovable-uploads/fc5d8e4b-854f-4734-96e0-59abf743630e.png" 
+                  alt="Zagreb Cathedral and city view"
+                  className="rounded-lg max-w-full h-auto"
+                />
+              </div>
+              
+              {/* App logo in orange square - positioned to "stick out" at bottom left */}
+              <div className="absolute -bottom-6 -left-6 bg-[#E56717] rounded-lg p-4 shadow-lg">
+                <Home className="h-12 w-12 text-white" />
               </div>
             </div>
           </div>
