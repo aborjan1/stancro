@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Home, CheckCircle, Search, SmartphoneIcon, HomeIcon } from "lucide-react";
+import { ArrowRight, Home, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import CitiesCarousel from "@/components/CitiesCarousel";
 import Navbar from "@/components/Navbar";
@@ -189,7 +189,7 @@ const Index = () => {
             <div className="md:w-1/2">
               <div className="rounded-lg overflow-hidden shadow-xl">
                 <img 
-                  src="https://www.investopedia.com/thmb/2-g8OpYwO_EQbVTS4Yuxl7aBmkw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/rentingahouse-3075159c4f894931b2af822ded2e56c5.jpg" 
+                  src="/placeholder.svg" 
                   alt="List your property" 
                   className="w-full h-auto"
                 />
@@ -199,61 +199,10 @@ const Index = () => {
         </div>
       </section>
       
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-4">How StanCro works</h2>
-          <p className="text-center text-gray-600 mb-12">Find your perfect student accommodation in just three easy steps</p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
-                <img 
-                  src="/lovable-uploads/98ac53b7-cd10-446c-ba31-d9df2f3442af.png" 
-                  alt="Start your search" 
-                  className="w-full h-48 object-cover"
-                />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Start your search</h3>
-              <p className="text-gray-600">Use the free and extensive filters to narrow your search</p>
-            </div>
-            
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
-                <img 
-                  src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
-                  alt="Connect with hosts" 
-                  className="w-full h-48 object-cover"
-                />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Connect with hosts</h3>
-              <p className="text-gray-600">Message landlords directly and ask any questions</p>
-            </div>
-            
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
-                <img 
-                  src="https://images.unsplash.com/photo-1522175279007-54cd987c196c" 
-                  alt="Find your new home" 
-                  className="w-full h-48 object-cover"
-                />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Find your new home</h3>
-              <p className="text-gray-600">Plan viewings to meet landlords and future roommates</p>
-            </div>
-          </div>
-          
-          <div className="text-center mt-10">
-            <Button variant="outline" className="border-[#E56717] text-[#E56717] hover:bg-[#E56717] hover:text-white">
-              Learn more
-            </Button>
-          </div>
-        </div>
-      </section>
-      
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-4">Discover Croatian Cities</h2>
-          <p className="text-center text-gray-600 mb-12">Find student housing in these beautiful locations across Croatia</p>
+         
+          <p className="text-center text-gray-600 mb-12">How StanCro works</p>
           
           <CitiesCarousel />
         </div>
