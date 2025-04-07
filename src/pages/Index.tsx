@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -77,9 +76,16 @@ const Index = () => {
                   <span className="text-white text-xl font-bold">100+</span>
                 </div>
                 
-                {/* City name */}
+                {/* City name with new Zagreb image */}
                 <div className="text-white ml-2">
-                  <p><img src ="https://i.natgeofe.com/n/a11e9ead-955f-4a4e-977c-d1b2f104ee75/zagrebgettyimages-1144074611hr.jpg?w=1436&h=956"></img>Zagreb City View</p>
+                  <p>
+                    <img 
+                      src="/lovable-uploads/fc5d8e4b-854f-4734-96e0-59abf743630e.png" 
+                      alt="Zagreb Cathedral and city view"
+                      className="rounded-lg max-w-full h-auto"
+                    />
+                    Zagreb City View
+                  </p>
                 </div>
               </div>
             </div>
