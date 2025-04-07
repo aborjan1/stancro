@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from "react-router-dom";
 import { 
   NavigationMenu,
@@ -9,7 +9,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Home, Search, Filter, Info, Building } from "lucide-react";
+import { Home, Search, Filter, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
@@ -47,14 +47,6 @@ const Navbar = () => {
                 <Button variant={isScrolled ? "ghost" : "outline"} className={!isScrolled ? "bg-white/20 text-white hover:bg-white/30" : ""}>
                   <Home className="mr-1 h-4 w-4" />
                   Home
-                </Button>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link to="/housing">
-                <Button variant={isScrolled ? "ghost" : "outline"} className={!isScrolled ? "bg-white/20 text-white hover:bg-white/30" : ""}>
-                  <Building className="mr-1 h-4 w-4" />
-                  Housing
                 </Button>
               </Link>
             </NavigationMenuItem>
