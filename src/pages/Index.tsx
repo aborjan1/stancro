@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,12 +42,12 @@ const Index = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section - Updated to match the uploaded image */}
-      <header className="relative bg-[#151C2E] overflow-hidden">
-        <div className="container mx-auto px-4 py-16 md:py-24">
-          <div className="flex flex-col md:flex-row items-center justify-between">
+      {/* Hero Section - Full width */}
+      <header className="relative bg-[#151C2E] w-full overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-4 py-16 md:py-24 lg:py-32 h-[90vh] flex items-center">
+          <div className="flex flex-col md:flex-row items-center justify-between w-full">
             <div className="md:w-1/2 mb-8 md:mb-0">
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
                 Finding student housing in Croatia made simple
               </h1>
               <p className="text-xl text-white/90 mb-8">
