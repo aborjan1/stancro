@@ -6,14 +6,47 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import Navbar from '@/components/Navbar';
 
+// Interface for search filters
+interface FilterOptions {
+  priceRange: [number, number];
+  propertyTypes: string[];
+  bedrooms: number | null;
+  bathrooms: number | null;
+}
+
+interface SearchParams {
+  searchTerm: string;
+  filters: FilterOptions;
+}
+
 const Housing = () => {
   const [searchParams] = useSearchParams();
   const initialSearchTerm = searchParams.get('search') || '';
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   
-  // Update search term if URL parameters change
+  // Initialize filter states from URL parameters
+  const [filters, setFilters] = useState<FilterOptions>({
+    priceRange: [
+      Number(searchParams.get('minPrice')) || 200,
+      Number(searchParams.get('maxPrice')) || 900
+    ],
+    propertyTypes: searchParams.get('types')?.split(',') || [],
+    bedrooms: searchParams.get('beds') ? Number(searchParams.get('beds')) : null,
+    bathrooms: searchParams.get('baths') ? Number(searchParams.get('baths')) : null
+  });
+  
+  // Update search term and filters if URL parameters change
   useEffect(() => {
     setSearchTerm(searchParams.get('search') || '');
+    setFilters({
+      priceRange: [
+        Number(searchParams.get('minPrice')) || filters.priceRange[0],
+        Number(searchParams.get('maxPrice')) || filters.priceRange[1]
+      ],
+      propertyTypes: searchParams.get('types')?.split(',') || filters.propertyTypes,
+      bedrooms: searchParams.get('beds') ? Number(searchParams.get('beds')) : filters.bedrooms,
+      bathrooms: searchParams.get('baths') ? Number(searchParams.get('baths')) : filters.bathrooms
+    });
   }, [searchParams]);
   
   // Mock data for recently listed housing
@@ -23,6 +56,7 @@ const Housing = () => {
       title: "Modern Studio in Zagreb Center",
       description: "Bright and modern studio apartment located in the heart of Zagreb. Perfect for students.",
       price: "€400/month",
+      priceValue: 400,
       location: "Zagreb, City Center",
       beds: 1,
       baths: 1,
@@ -35,6 +69,7 @@ const Housing = () => {
       title: "Spacious 2-bedroom in Split",
       description: "Beautiful apartment with a sea view, fully furnished and close to the university.",
       price: "€650/month",
+      priceValue: 650,
       location: "Split, Riva",
       beds: 2,
       baths: 1,
@@ -47,6 +82,7 @@ const Housing = () => {
       title: "Cozy Room in Student House",
       description: "Private room in a shared student house with common areas and all utilities included.",
       price: "€300/month",
+      priceValue: 300,
       location: "Zagreb, Jarun",
       beds: 1,
       baths: 1,
@@ -59,6 +95,7 @@ const Housing = () => {
       title: "Newly Renovated Apartment",
       description: "Fully renovated 1-bedroom apartment close to public transport and amenities.",
       price: "€500/month",
+      priceValue: 500,
       location: "Rijeka, Center",
       beds: 1,
       baths: 1,
@@ -71,9 +108,10 @@ const Housing = () => {
       title: "Student Dorm Single Room",
       description: "Single room in student dormitory with included utilities and access to cafeteria.",
       price: "€200/month",
+      priceValue: 200,
       location: "Osijek, University Campus",
       beds: 1,
-      baths: "Shared",
+      baths: 0,
       area: "12m²",
       type: "Dorm",
       image: "/placeholder.svg"
@@ -83,6 +121,7 @@ const Housing = () => {
       title: "Luxury 3-bedroom with Balcony",
       description: "Spacious apartment with a large balcony, perfect for sharing with roommates.",
       price: "€900/month",
+      priceValue: 900,
       location: "Dubrovnik, Lapad",
       beds: 3,
       baths: 2,
@@ -92,15 +131,37 @@ const Housing = () => {
     }
   ];
 
-  // Filter housing listings based on search term
-  const filteredHousing = searchTerm 
-    ? recentHousing.filter(housing => 
-        housing.location.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : recentHousing;
+  // Filter housing listings based on all filters
+  const filteredHousing = recentHousing.filter(housing => {
+    // Filter by search term (city)
+    const matchesSearchTerm = searchTerm 
+      ? housing.location.toLowerCase().includes(searchTerm.toLowerCase())
+      : true;
+    
+    // Filter by price range
+    const priceInRange = housing.priceValue >= filters.priceRange[0] && 
+                          housing.priceValue <= filters.priceRange[1];
+    
+    // Filter by property type
+    const matchesType = filters.propertyTypes.length === 0 || 
+                        filters.propertyTypes.some(type => 
+                          housing.type.toLowerCase() === type.toLowerCase());
+    
+    // Filter by number of bedrooms
+    const matchesBeds = filters.bedrooms === null || 
+                        housing.beds >= filters.bedrooms;
+    
+    // Filter by number of bathrooms
+    const matchesBaths = filters.bathrooms === null || 
+                         housing.baths >= filters.bathrooms;
+    
+    // Return true only if all filters match
+    return matchesSearchTerm && priceInRange && matchesType && matchesBeds && matchesBaths;
+  });
 
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
+  const handleSearch = (searchParams: SearchParams) => {
+    setSearchTerm(searchParams.searchTerm);
+    setFilters(searchParams.filters);
   };
 
   return (
@@ -122,6 +183,29 @@ const Housing = () => {
               Showing results for: "{searchTerm}"
             </p>
           )}
+          {/* Show active filters */}
+          {(filters.propertyTypes.length > 0 || filters.bedrooms !== null || filters.bathrooms !== null) && (
+            <div className="flex flex-wrap gap-2 mt-3">
+              {filters.propertyTypes.map(type => (
+                <span key={type} className="bg-white/20 text-white text-sm px-2 py-1 rounded-full">
+                  {type}
+                </span>
+              ))}
+              {filters.bedrooms !== null && (
+                <span className="bg-white/20 text-white text-sm px-2 py-1 rounded-full">
+                  {filters.bedrooms}+ beds
+                </span>
+              )}
+              {filters.bathrooms !== null && (
+                <span className="bg-white/20 text-white text-sm px-2 py-1 rounded-full">
+                  {filters.bathrooms}+ baths
+                </span>
+              )}
+              <span className="bg-white/20 text-white text-sm px-2 py-1 rounded-full">
+                €{filters.priceRange[0]} - €{filters.priceRange[1]}
+              </span>
+            </div>
+          )}
         </div>
       </section>
 
@@ -130,16 +214,10 @@ const Housing = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold">
-              {searchTerm ? `Search Results` : `Recent Listings`}
+              {searchTerm || filters.propertyTypes.length > 0 || filters.bedrooms !== null || filters.bathrooms !== null
+                ? `${filteredHousing.length} Results Found`
+                : `Recent Listings`}
             </h2>
-            <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm">
-                Filter
-              </Button>
-              <Button variant="outline" size="sm">
-                Sort by: Newest
-              </Button>
-            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -190,13 +268,13 @@ const Housing = () => {
               ))
             ) : (
               <div className="col-span-1 md:col-span-2 lg:col-span-3 py-8 text-center">
-                <p className="text-lg text-gray-500">No housing found for "{searchTerm}". Try another city.</p>
+                <p className="text-lg text-gray-500">No housing found matching your criteria.</p>
                 <Button 
                   variant="outline" 
                   className="mt-4"
-                  onClick={() => setSearchTerm("")}
+                  onClick={() => window.location.href = "/housing"}
                 >
-                  Clear Search
+                  Clear All Filters
                 </Button>
               </div>
             )}
