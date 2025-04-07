@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -57,9 +58,11 @@ const Index = () => {
                 StanCro connects students with verified landlords on a single platform, making housing search easier and safer.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-white text-[#151C2E] hover:bg-white/90">
-                  Find Housing
-                </Button>
+                <Link to="/housing">
+                  <Button size="lg" className="bg-white text-[#151C2E] hover:bg-white/90">
+                    Find Housing
+                  </Button>
+                </Link>
                 <Button 
                   size="lg" 
                   className="bg-[#E56717] text-white hover:bg-[#E56717]/90 transition-colors"

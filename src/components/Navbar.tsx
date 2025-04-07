@@ -9,7 +9,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Home, Search, Filter, Info } from "lucide-react";
+import { Home, Search, Filter, Info, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
@@ -51,6 +51,14 @@ const Navbar = () => {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
+              <Link to="/housing">
+                <Button variant={isScrolled ? "ghost" : "outline"} className={!isScrolled ? "bg-white/20 text-white hover:bg-white/30" : ""}>
+                  <Building className="mr-1 h-4 w-4" />
+                  Housing
+                </Button>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
               <NavigationMenuTrigger className={!isScrolled ? "bg-white/20 text-white hover:bg-white/30" : ""}>
                 <Search className="mr-1 h-4 w-4" />
                 Search
@@ -66,7 +74,7 @@ const Navbar = () => {
                       <NavigationMenuLink asChild>
                         <Link
                           className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-4 no-underline outline-none focus:shadow-md"
-                          to="/"
+                          to="/housing"
                         >
                           <div className="mb-2 mt-4 text-lg font-medium">
                             Find Housing
