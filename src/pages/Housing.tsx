@@ -72,32 +72,39 @@ const Housing = () => {
     });
   }, [searchParams]);
   
-  // Fetch listings from Supabase
+  // Fetch listings from Supabase - Debug version to show what's happening
   const { data: listings, isLoading, error } = useQuery({
     queryKey: ['listings', searchTerm, filters],
     queryFn: async () => {
       try {
+        console.log("Fetching listings with filters:", { searchTerm, filters });
+        
         let query = supabase
           .from('listings')
           .select('*');
         
         // Apply filters
         if (searchTerm) {
+          console.log("Applying search term filter:", searchTerm);
           query = query.ilike('location', `%${searchTerm}%`);
         }
         
         if (filters.propertyTypes.length > 0) {
+          console.log("Applying property types filter:", filters.propertyTypes);
           query = query.in('property_type', filters.propertyTypes);
         }
         
         if (filters.bedrooms !== null) {
+          console.log("Applying bedrooms filter:", filters.bedrooms);
           query = query.gte('beds', filters.bedrooms);
         }
         
         if (filters.bathrooms !== null) {
+          console.log("Applying bathrooms filter:", filters.bathrooms);
           query = query.gte('baths', filters.bathrooms);
         }
         
+        console.log("Applying price range filter:", filters.priceRange);
         query = query
           .gte('price', filters.priceRange[0])
           .lte('price', filters.priceRange[1]);
@@ -105,7 +112,22 @@ const Housing = () => {
         const { data, error } = await query;
         
         if (error) {
+          console.error("Supabase error:", error);
           throw new Error(error.message);
+        }
+        
+        console.log("Listings fetched:", data);
+        
+        // If we have no listings, let's try a simple query to see if there's any data at all
+        if (!data || data.length === 0) {
+          console.log("No listings found with filters, trying a simple query");
+          const { data: allData, error: allError } = await supabase.from('listings').select('*').limit(10);
+          
+          if (allError) {
+            console.error("Supabase error on simple query:", allError);
+          } else {
+            console.log("All listings (up to 10):", allData);
+          }
         }
         
         return data as Listing[];
@@ -179,6 +201,11 @@ const Housing = () => {
               {isLoading ? "Loading listings..." : 
                 listings && listings.length > 0 ? `${listings.length} Results Found` : "No Listings Found"}
             </h2>
+            
+            {/* Debug information for development */}
+            {error && (
+              <div className="text-red-500 text-sm">Error: {String(error)}</div>
+            )}
           </div>
           
           {isLoading ? (
