@@ -9,7 +9,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Home, Search, Filter, Info, SlidersHorizontal, LogIn } from "lucide-react";
+import { Home, Search, Filter, Info, SlidersHorizontal, LogIn, UserCircle, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -19,6 +19,16 @@ import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useAuth } from "@/contexts/AuthContext";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
 // Define the filter options interface
 interface FilterOptions {
@@ -40,6 +50,7 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+  const { user, signOut } = useAuth();
   
   // Filter states
   const [priceRange, setPriceRange] = useState<[number, number]>([200, 900]);
@@ -102,6 +113,11 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
     setSelectedPropertyTypes([]);
     setBedrooms(null);
     setBathrooms(null);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
   };
   
   return (
@@ -252,12 +268,46 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
               </Popover>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link to="/auth">
-                <Button variant={isScrolled ? "ghost" : "outline"} className={!isScrolled ? "bg-white/20 text-white hover:bg-white/30" : ""}>
-                  <LogIn className="mr-1 h-4 w-4" />
-                  Login / Register
-                </Button>
-              </Link>
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant={isScrolled ? "ghost" : "outline"} className={!isScrolled ? "bg-white/20 text-white hover:bg-white/30" : ""}>
+                      <UserCircle className="mr-1 h-4 w-4" />
+                      Profile
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel className="flex items-center gap-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user.user_metadata?.avatar_url} />
+                        <AvatarFallback>{user.email?.substring(0, 2).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <span className="font-medium">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
+                        <span className="text-xs text-muted-foreground truncate">{user.email}</span>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <Link to="/list-property">
+                      <DropdownMenuItem>
+                        List Property
+                      </DropdownMenuItem>
+                    </Link>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Link to="/auth">
+                  <Button variant={isScrolled ? "ghost" : "outline"} className={!isScrolled ? "bg-white/20 text-white hover:bg-white/30" : ""}>
+                    <LogIn className="mr-1 h-4 w-4" />
+                    Login / Register
+                  </Button>
+                </Link>
+              )}
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
