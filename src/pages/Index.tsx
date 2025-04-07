@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -88,7 +87,6 @@ const Index = () => {
   
   const currentImage = cityImages[currentImageIndex];
   
-  // How StanCro works steps
   const howItWorksSteps = [
     {
       icon: "🔍",
@@ -206,7 +204,10 @@ const Index = () => {
                   </div>
                 </div>
               </div>
-              <Button className="bg-[#E56717] hover:bg-[#d05c13] text-white">
+              <Button 
+                className="bg-[#E56717] hover:bg-[#d05c13] text-white"
+                onClick={() => navigate("/list-property")}
+              >
                 List Your Property
                 <Home className="ml-2 h-5 w-5" />
               </Button>
@@ -263,7 +264,6 @@ const Index = () => {
       
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-4">Discover Croatian Cities</h2>
           <p className="text-center text-gray-600 mb-12">Find student housing in Croatia's most popular university destinations</p>
           
           <CitiesCarousel />
