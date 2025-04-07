@@ -2,9 +2,9 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
 import { 
-  LogOut, Settings, Building, User, Users, Coins, UserCircle, 
+  LogOut, Settings, User, 
   HelpCircle, ShieldCheck, Lightbulb, FileText, 
-  Info, Newspaper, Search
+  Info, Newspaper
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -35,7 +35,7 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({ isScrolled }) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant={isScrolled ? "ghost" : "outline"} className={!isScrolled ? "bg-white/20 text-white hover:bg-white/30" : ""}>
-          <UserCircle className="mr-1 h-4 w-4" />
+          <User className="mr-1 h-4 w-4" />
           Profile
         </Button>
       </DropdownMenuTrigger>
@@ -52,69 +52,44 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({ isScrolled }) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/subscribe")}>
           <Newspaper className="mr-2 h-4 w-4 text-muted-foreground" />
           Subscribe now
         </DropdownMenuItem>
         
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/profile")}>
           <User className="mr-2 h-4 w-4 text-muted-foreground" />
           My profile
         </DropdownMenuItem>
         
-        <DropdownMenuItem>
-          <Building className="mr-2 h-4 w-4 text-muted-foreground" />
-          My adverts
-        </DropdownMenuItem>
-
-        <DropdownMenuItem>
-          <Search className="mr-2 h-4 w-4 text-muted-foreground" />
-          Searching for a room
-        </DropdownMenuItem>
-
-        <DropdownMenuItem>
-          <Users className="mr-2 h-4 w-4 text-muted-foreground" />
-          Searching for a tenant
-        </DropdownMenuItem>
-        
-        <DropdownMenuItem>
-          <Coins className="mr-2 h-4 w-4 text-muted-foreground" />
-          Cashback & discounts
-        </DropdownMenuItem>
-        
-        <DropdownMenuItem>
-          <UserCircle className="mr-2 h-4 w-4 text-muted-foreground" />
-          My account
-        </DropdownMenuItem>
-        
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/settings")}>
           <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
           Settings
         </DropdownMenuItem>
         
         <DropdownMenuSeparator />
         
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/how-it-works")}>
           <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
           How does it work?
         </DropdownMenuItem>
         
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/about")}>
           <Info className="mr-2 h-4 w-4 text-muted-foreground" />
           About StanCro
         </DropdownMenuItem>
         
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/safety")}>
           <ShieldCheck className="mr-2 h-4 w-4 text-muted-foreground" />
           Safety
         </DropdownMenuItem>
         
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/tips")}>
           <Lightbulb className="mr-2 h-4 w-4 text-muted-foreground" />
           Useful tips
         </DropdownMenuItem>
         
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/support")}>
           <HelpCircle className="mr-2 h-4 w-4 text-muted-foreground" />
           Support
         </DropdownMenuItem>
