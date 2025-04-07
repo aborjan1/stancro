@@ -31,8 +31,10 @@ const Housing = () => {
       Number(searchParams.get('maxPrice')) || 900
     ],
     propertyTypes: searchParams.get('types')?.split(',') || [],
-    bedrooms: searchParams.get('beds') ? Number(searchParams.get('beds')) : null,
-    bathrooms: searchParams.get('baths') ? Number(searchParams.get('baths')) : null
+    bedrooms: searchParams.get('beds') ? 
+      (searchParams.get('beds') === 'any' ? null : Number(searchParams.get('beds'))) : null,
+    bathrooms: searchParams.get('baths') ? 
+      (searchParams.get('baths') === 'any' ? null : Number(searchParams.get('baths'))) : null
   });
   
   // Update search term and filters if URL parameters change
@@ -44,8 +46,10 @@ const Housing = () => {
         Number(searchParams.get('maxPrice')) || filters.priceRange[1]
       ],
       propertyTypes: searchParams.get('types')?.split(',') || filters.propertyTypes,
-      bedrooms: searchParams.get('beds') ? Number(searchParams.get('beds')) : filters.bedrooms,
-      bathrooms: searchParams.get('baths') ? Number(searchParams.get('baths')) : filters.bathrooms
+      bedrooms: searchParams.get('beds') ? 
+        (searchParams.get('beds') === 'any' ? null : Number(searchParams.get('beds'))) : filters.bedrooms,
+      bathrooms: searchParams.get('baths') ? 
+        (searchParams.get('baths') === 'any' ? null : Number(searchParams.get('baths'))) : filters.bathrooms
     });
   }, [searchParams]);
   
