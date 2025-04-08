@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -20,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { Bell } from "lucide-react";
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters."),
@@ -46,7 +46,6 @@ const Settings = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("profile");
   
-  // Redirect to auth page if user is not authenticated
   React.useEffect(() => {
     if (!user) {
       navigate('/auth');
@@ -129,7 +128,6 @@ const Settings = () => {
       <Navbar />
       <div className="container mx-auto mt-24 px-4 py-8">
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Left sidebar */}
           <div className="w-full md:w-1/4 bg-slate-900 text-white rounded-lg p-6">
             <div className="flex flex-col items-center mb-6">
               <Avatar className="h-24 w-24 mb-4">
@@ -150,8 +148,9 @@ const Settings = () => {
               <Button onClick={() => navigate('/dashboard')} variant="ghost" className="w-full justify-start">
                 Dashboard
               </Button>
-              <Button onClick={() => navigate('/messages')} variant="ghost" className="w-full justify-start">
-                Messages
+              <Button onClick={() => navigate('/notifications')} variant="ghost" className="w-full justify-start">
+                <Bell className="mr-2 h-4 w-4" />
+                Notifications
               </Button>
               <Button onClick={() => navigate('/profile')} variant="ghost" className="w-full justify-start">
                 My account
@@ -162,7 +161,6 @@ const Settings = () => {
             </nav>
           </div>
           
-          {/* Main content */}
           <div className="flex-1 bg-white rounded-lg shadow-md p-6">
             <div className="border-b pb-4 mb-6">
               <h1 className="text-2xl font-bold">My Account</h1>

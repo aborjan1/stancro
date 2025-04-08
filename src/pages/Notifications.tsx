@@ -8,13 +8,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { Bell } from "lucide-react";
 
-const Profile = () => {
+const Notifications = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [notifications, setNotifications] = useState([
     { id: 1, message: "Ana is interested in your apartment in Zagreb", date: "Today" },
     { id: 2, message: "Marko is interested in your house in Split", date: "Yesterday" },
+    { id: 3, message: "Ivan wants to know more about your property", date: "2 days ago" },
+    { id: 4, message: "Petra is looking for more details on your listing", date: "Last week" },
   ]);
   
   // Redirect to auth page if user is not authenticated
@@ -33,7 +35,6 @@ const Profile = () => {
   };
 
   const handleNotificationClick = (id: number) => {
-    // Here you would handle the notification, e.g. mark as read, navigate to listing, etc.
     toast({
       title: "Notification handled",
       description: "You've responded to the notification",
@@ -41,10 +42,6 @@ const Profile = () => {
     
     // Remove the notification from the list
     setNotifications(notifications.filter(notification => notification.id !== id));
-  };
-
-  const goToNotifications = () => {
-    navigate('/notifications');
   };
 
   if (!user) return null;
@@ -75,7 +72,7 @@ const Profile = () => {
               <Button onClick={() => navigate('/dashboard')} variant="ghost" className="w-full justify-start">
                 Dashboard
               </Button>
-              <Button onClick={goToNotifications} variant="ghost" className="w-full justify-start">
+              <Button onClick={() => navigate('/notifications')} variant="ghost" className="w-full justify-start bg-slate-800">
                 <Bell className="mr-2 h-4 w-4" />
                 Notifications
                 {notifications.length > 0 && (
@@ -84,7 +81,7 @@ const Profile = () => {
                   </span>
                 )}
               </Button>
-              <Button onClick={() => navigate('/profile')} variant="ghost" className="w-full justify-start bg-slate-800">
+              <Button onClick={() => navigate('/profile')} variant="ghost" className="w-full justify-start">
                 My account
               </Button>
               <Button onClick={() => navigate('/settings')} variant="ghost" className="w-full justify-start">
@@ -96,28 +93,21 @@ const Profile = () => {
           {/* Main content */}
           <div className="flex-1 bg-white rounded-lg shadow-md p-6">
             <div className="border-b pb-4 mb-6">
-              <h1 className="text-2xl font-bold">My Profile</h1>
-              <p className="text-gray-500">Manage your personal information</p>
+              <h1 className="text-2xl font-bold">My Notifications</h1>
+              <p className="text-gray-500">Manage your notifications</p>
             </div>
             
             <div className="space-y-6">
-              <div>
-                <h2 className="text-lg font-medium mb-2">Personal Information</h2>
-                <p>Email: {user.email}</p>
-                <p>Name: {user?.user_metadata?.full_name || 'Not set'}</p>
-              </div>
-              
-              <div>
-                <h2 className="text-lg font-medium mb-2">Notifications</h2>
-                {notifications.length > 0 ? (
-                  <div className="space-y-2">
+              {notifications.length > 0 ? (
+                <div>
+                  <div className="grid grid-cols-1 gap-4">
                     {notifications.map((notification) => (
                       <div key={notification.id} className="bg-slate-50 p-4 rounded-md border border-slate-100">
                         <div className="flex justify-between">
-                          <p>{notification.message}</p>
+                          <p className="font-medium">{notification.message}</p>
                           <span className="text-sm text-gray-500">{notification.date}</span>
                         </div>
-                        <div className="mt-2 flex justify-end space-x-2">
+                        <div className="mt-4 flex justify-end space-x-2">
                           <Button 
                             size="sm" 
                             variant="outline"
@@ -128,32 +118,24 @@ const Profile = () => {
                         </div>
                       </div>
                     ))}
-                    <div className="flex justify-between items-center mt-4">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={clearNotifications}
-                      >
-                        Clear all
-                      </Button>
-                      
-                      <Button 
-                        variant="outline"
-                        size="sm"
-                        onClick={goToNotifications}
-                      >
-                        View all notifications
-                      </Button>
-                    </div>
                   </div>
-                ) : (
-                  <p className="text-gray-500">You have no new notifications.</p>
-                )}
-              </div>
-              
-              <Button onClick={() => navigate('/settings')} variant="outline">
-                Edit Profile
-              </Button>
+                  
+                  <div className="mt-6 flex justify-end">
+                    <Button 
+                      variant="outline"
+                      onClick={clearNotifications}
+                    >
+                      Clear all notifications
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <Bell className="mx-auto h-12 w-12 text-gray-300" />
+                  <h3 className="mt-4 text-lg font-medium">No notifications</h3>
+                  <p className="mt-2 text-gray-500">You have no new notifications at this time.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -162,4 +144,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Notifications;
