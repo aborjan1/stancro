@@ -22,6 +22,14 @@ const ListingDetail = () => {
     });
   };
 
+  // Function to handle save to favorites
+  const handleSaveToFavorites = () => {
+    toast({
+      title: "Property Saved",
+      description: "This property has been added to your favorites.",
+    });
+  };
+
   if (isLoading) {
     return (
       <>
@@ -75,12 +83,20 @@ const ListingDetail = () => {
     <>
       <Navbar />
       <div className="container mx-auto px-4 py-24">
-        {/* Back button */}
-        <div className="mb-6">
+        {/* Navigation bar with home button similar to the image */}
+        <div className="mb-6 inline-flex items-center bg-white/90 shadow-sm rounded-md p-1">
+          <Button variant="ghost" asChild className="flex items-center">
+            <Link to="/">
+              <div className="flex items-center">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Home
+              </div>
+            </Link>
+          </Button>
+          <Separator orientation="vertical" className="h-6 mx-2" />
           <Button variant="ghost" asChild>
             <Link to="/housing">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Listings
+              View All Listings
             </Link>
           </Button>
         </div>
@@ -112,23 +128,23 @@ const ListingDetail = () => {
               </div>
               
               {/* Property characteristics */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 p-4 bg-gray-50 rounded-lg">
-                <div className="flex flex-col items-center text-center">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 p-4 bg-gray-50 rounded-lg shadow-sm">
+                <div className="flex flex-col items-center text-center p-2 hover:bg-white transition-colors rounded">
                   <Building className="h-6 w-6 mb-2 text-[#E56717]" />
                   <div className="text-sm text-muted-foreground">Type</div>
                   <div className="font-medium">{listing.property_type}</div>
                 </div>
-                <div className="flex flex-col items-center text-center">
+                <div className="flex flex-col items-center text-center p-2 hover:bg-white transition-colors rounded">
                   <BedDouble className="h-6 w-6 mb-2 text-[#E56717]" />
                   <div className="text-sm text-muted-foreground">Bedrooms</div>
                   <div className="font-medium">{listing.beds}</div>
                 </div>
-                <div className="flex flex-col items-center text-center">
+                <div className="flex flex-col items-center text-center p-2 hover:bg-white transition-colors rounded">
                   <Bath className="h-6 w-6 mb-2 text-[#E56717]" />
                   <div className="text-sm text-muted-foreground">Bathrooms</div>
                   <div className="font-medium">{listing.baths}</div>
                 </div>
-                <div className="flex flex-col items-center text-center">
+                <div className="flex flex-col items-center text-center p-2 hover:bg-white transition-colors rounded">
                   <Ruler className="h-6 w-6 mb-2 text-[#E56717]" />
                   <div className="text-sm text-muted-foreground">Area</div>
                   <div className="font-medium">{listing.area}</div>
@@ -151,7 +167,7 @@ const ListingDetail = () => {
                   <h2 className="text-xl font-semibold mb-4">Gallery</h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {listing.images.slice(1).map((image, index) => (
-                      <div key={index} className="aspect-video overflow-hidden rounded-md">
+                      <div key={index} className="aspect-video overflow-hidden rounded-md shadow-sm hover:shadow-md transition-shadow">
                         <img 
                           src={image} 
                           alt={`${listing.title} - Image ${index + 2}`}
@@ -167,11 +183,11 @@ const ListingDetail = () => {
               {listing.video_url && (
                 <div className="mb-8">
                   <h2 className="text-xl font-semibold mb-4">Video Tour</h2>
-                  <div className="aspect-video w-full">
+                  <div className="aspect-video w-full rounded-lg overflow-hidden shadow-sm">
                     <iframe
                       src={listing.video_url}
                       title="Property video tour"
-                      className="w-full h-full rounded-lg"
+                      className="w-full h-full"
                       allowFullScreen
                     />
                   </div>
@@ -181,15 +197,15 @@ const ListingDetail = () => {
             
             {/* Right column - Contact box */}
             <div className="md:w-80">
-              <div className="bg-gray-50 rounded-lg p-6 sticky top-24">
+              <div className="bg-white rounded-lg p-6 sticky top-24 shadow-sm border border-gray-100">
                 <h3 className="text-lg font-semibold mb-4">Interested in this property?</h3>
                 <p className="text-sm text-muted-foreground mb-6">
                   Contact the property owner directly to arrange a viewing.
                 </p>
-                <Button className="w-full mb-4" onClick={handleContactOwner}>
+                <Button onClick={handleContactOwner} className="w-full mb-4 bg-[#E56717] hover:bg-[#D55606] text-white">
                   Contact Owner
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full border-[#E56717] text-[#E56717] hover:bg-[#E56717]/10" onClick={handleSaveToFavorites}>
                   Save to Favorites
                 </Button>
               </div>
