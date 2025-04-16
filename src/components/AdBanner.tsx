@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Card } from "@/components/ui/card";
 import { ExternalLink } from 'lucide-react';
@@ -35,7 +34,7 @@ const AdBanner = ({ size = 'medium', position = 'inline', className = '' }: AdBa
   const useRealAds = false; // Set to true when you have your ad network credentials
   
   useEffect(() => {
-    if (useRealAds && window.adsbygoogle && adContainerRef.current) {
+    if (useRealAds && typeof window !== 'undefined' && window.adsbygoogle && adContainerRef.current) {
       try {
         // Clear any previous ad content
         if (adContainerRef.current.children.length > 0) {
@@ -72,7 +71,7 @@ const AdBanner = ({ size = 'medium', position = 'inline', className = '' }: AdBa
         });
       }
     }
-  }, [size, position, useRealAds]);
+  }, [size, position, useRealAds, toast]);
   
   // Mock ads for development or when real ads aren't configured
   const mockAds = [
