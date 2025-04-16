@@ -2,6 +2,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface ListingStat {
   id: string;
@@ -16,9 +18,46 @@ interface ListingStatistics {
   listingStats: ListingStat[];
 }
 
-// This hook fetches simulated statistics since we don't have real view/interest tracking yet
 export const useListingStatistics = () => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  // Set up real-time subscription for listing views
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('real-time-views')
+      .on('postgres_changes', 
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'listing_views',
+          filter: `viewer_id=eq.${user.id}`
+        }, 
+        () => {
+          // Invalidate the query when new views are added
+          queryClient.invalidateQueries({ queryKey: ['listingStatistics', user.id] });
+        }
+      )
+      .on('postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+          filter: `recipient_id=eq.${user.id}`
+        },
+        () => {
+          // Invalidate the query when new interests are added
+          queryClient.invalidateQueries({ queryKey: ['listingStatistics', user.id] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, queryClient]);
 
   return useQuery({
     queryKey: ['listingStatistics', user?.id],
@@ -36,33 +75,41 @@ export const useListingStatistics = () => {
         throw listingsError;
       }
 
-      // Fetch notifications (interests) for the user's listings
-      const { data: notifications, error: notificationsError } = await supabase
-        .from('notifications')
-        .select('listing_id, type')
-        .in('listing_id', listings.map(listing => listing.id))
-        .eq('type', 'interest');
+      // Create an array to collect statistics for each listing
+      const listingStatsPromises = listings.map(async (listing) => {
+        // Get real view count from listing_views table
+        const { count: viewsCount, error: viewsError } = await supabase
+          .from('listing_views')
+          .select('*', { count: 'exact', head: true })
+          .eq('listing_id', listing.id);
 
-      if (notificationsError) {
-        console.error("Error fetching notifications:", notificationsError);
-        throw notificationsError;
-      }
+        if (viewsError) {
+          console.error("Error counting views:", viewsError);
+          throw viewsError;
+        }
 
-      // Create statistics for each listing
-      const listingStats: ListingStat[] = listings.map(listing => {
-        const interestsCount = notifications.filter(n => n.listing_id === listing.id).length;
-        
-        // Generate a random view count (between interests count and 20+interests)
-        // In a real app, you would track actual views
-        const viewsCount = interestsCount + Math.floor(Math.random() * 20) + 5;
-        
+        // Get interest count from notifications table
+        const { count: interestsCount, error: interestsError } = await supabase
+          .from('notifications')
+          .select('*', { count: 'exact', head: true })
+          .eq('listing_id', listing.id)
+          .eq('type', 'interest');
+
+        if (interestsError) {
+          console.error("Error counting interests:", interestsError);
+          throw interestsError;
+        }
+
         return {
           id: listing.id,
           title: listing.title,
-          views: viewsCount,
-          interests: interestsCount
+          views: viewsCount || 0,
+          interests: interestsCount || 0
         };
       });
+
+      // Resolve all promises
+      const listingStats = await Promise.all(listingStatsPromises);
 
       // Calculate totals
       const totalViews = listingStats.reduce((sum, stat) => sum + stat.views, 0);

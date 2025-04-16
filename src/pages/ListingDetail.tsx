@@ -1,10 +1,10 @@
-
 import React, { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, MapPin, Building, BedDouble, Bath, Ruler } from 'lucide-react';
 import { useListing } from '@/hooks/useListing';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTrackListingView } from '@/hooks/useTrackListingView';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -17,6 +17,9 @@ const ListingDetail = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { sendNotification } = useNotifications();
+
+  // Track the view when this listing is viewed
+  useTrackListingView(id);
 
   // Function to handle contact owner button click
   const handleContactOwner = () => {
