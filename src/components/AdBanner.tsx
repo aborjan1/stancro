@@ -53,7 +53,7 @@ const AdBanner = ({ size = 'medium', position = 'inline', className = '' }: AdBa
           adElement.style.width = `${adWidth}px`;
           adElement.style.height = `${adHeight}px`;
           adElement.setAttribute('data-ad-client', 'ca-pub-1167981328374158'); // Your AdSense publisher ID
-          adElement.setAttribute('data-ad-slot', '1234567890');     // Replace with your specific ad slot ID
+          adElement.setAttribute('data-ad-slot', 'REPLACE_WITH_YOUR_ACTUAL_AD_SLOT_ID');  // Replace this with your actual ad slot ID
           adElement.setAttribute('data-ad-format', 'auto');
           
           // Add the ad to the container
