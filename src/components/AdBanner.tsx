@@ -30,38 +30,41 @@ const AdBanner = ({ size = 'medium', position = 'inline', className = '' }: AdBa
     large: 'h-32',
   };
   
-  // Flag to determine if we should show real ads or mock ads
-  const useRealAds = false; // Set to true when you have your ad network credentials
+  // Flag to determine if we should show real ads
+  const useRealAds = true; // Set to true now that we have the AdSense script
   
   useEffect(() => {
-    if (useRealAds && typeof window !== 'undefined' && window.adsbygoogle && adContainerRef.current) {
+    // Ensure we're in a browser environment and have the AdSense script
+    if (useRealAds && typeof window !== 'undefined' && window.adsbygoogle) {
       try {
         // Clear any previous ad content
-        if (adContainerRef.current.children.length > 0) {
-          adContainerRef.current.innerHTML = '';
-        }
+        if (adContainerRef.current) {
+          if (adContainerRef.current.children.length > 0) {
+            adContainerRef.current.innerHTML = '';
+          }
 
-        // Create the ad slot
-        const adElement = document.createElement('ins');
-        const adWidth = adSizeFormats[size].width;
-        const adHeight = adSizeFormats[size].height;
-        
-        adElement.className = 'adsbygoogle';
-        adElement.style.display = 'inline-block';
-        adElement.style.width = `${adWidth}px`;
-        adElement.style.height = `${adHeight}px`;
-        adElement.setAttribute('data-ad-client', 'YOUR-AD-CLIENT-ID'); // Replace with your ad client ID
-        adElement.setAttribute('data-ad-slot', 'YOUR-AD-SLOT-ID');     // Replace with your ad slot ID
-        adElement.setAttribute('data-ad-format', 'auto');
-        
-        // Add the ad to the container
-        adContainerRef.current.appendChild(adElement);
-        
-        // Request an ad
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        
-        // Track ad impression (you can integrate with your analytics here)
-        console.log(`Real Ad impression at position: ${position}`);
+          // Create the ad slot
+          const adElement = document.createElement('ins');
+          const adWidth = adSizeFormats[size].width;
+          const adHeight = adSizeFormats[size].height;
+          
+          adElement.className = 'adsbygoogle';
+          adElement.style.display = 'inline-block';
+          adElement.style.width = `${adWidth}px`;
+          adElement.style.height = `${adHeight}px`;
+          adElement.setAttribute('data-ad-client', 'ca-pub-1167981328374158'); // Your AdSense publisher ID
+          adElement.setAttribute('data-ad-slot', '1234567890');     // Replace with your specific ad slot ID
+          adElement.setAttribute('data-ad-format', 'auto');
+          
+          // Add the ad to the container
+          adContainerRef.current.appendChild(adElement);
+          
+          // Request an ad
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+          
+          // Track ad impression (you can integrate with your analytics here)
+          console.log(`Real Ad impression at position: ${position}`);
+        }
       } catch (error) {
         console.error('Error displaying ad:', error);
         toast({
