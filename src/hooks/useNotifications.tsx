@@ -17,7 +17,7 @@ export interface Notification {
     avatar_url: string | null;
     full_name: string | null;
     username: string | null;
-  };
+  } | null;
 }
 
 export const useNotifications = () => {
@@ -33,7 +33,7 @@ export const useNotifications = () => {
       .from('notifications')
       .select(`
         *,
-        sender:profiles!sender_id(
+        sender:profiles(
           avatar_url,
           full_name,
           username
@@ -47,7 +47,7 @@ export const useNotifications = () => {
       throw error;
     }
 
-    return data as Notification[];
+    return data as unknown as Notification[];
   };
 
   const { data: notifications = [], isLoading, error } = useQuery({
@@ -161,7 +161,7 @@ export const useNotifications = () => {
 
   // Set up realtime subscription for new notifications
   const setupRealtimeNotifications = () => {
-    if (!user) return;
+    if (!user) return () => {};
 
     const channel = supabase
       .channel('public:notifications')
