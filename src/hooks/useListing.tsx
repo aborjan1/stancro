@@ -16,7 +16,7 @@ export interface Listing {
   images: string[];
   video_url: string | null;
   address: string;
-  owner_id: string; // Add this property
+  owner_id: string;
 }
 
 export const useListing = (id: string | undefined) => {

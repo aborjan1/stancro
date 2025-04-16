@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,17 +27,9 @@ export const useNotifications = () => {
   const fetchNotifications = async (): Promise<Notification[]> => {
     if (!user) throw new Error("User not authenticated");
 
-    // Query notifications and join with profiles to get sender info
     const { data, error } = await supabase
       .from('notifications')
-      .select(`
-        *,
-        sender:profiles(
-          avatar_url,
-          full_name,
-          username
-        )
-      `)
+      .select('*')
       .eq('recipient_id', user.id)
       .order('created_at', { ascending: false });
 
@@ -47,7 +38,7 @@ export const useNotifications = () => {
       throw error;
     }
 
-    return data as unknown as Notification[];
+    return data as Notification[];
   };
 
   const { data: notifications = [], isLoading, error } = useQuery({
@@ -56,7 +47,6 @@ export const useNotifications = () => {
     enabled: !!user,
   });
 
-  // Mutation to send a notification
   const sendNotification = useMutation({
     mutationFn: async ({ 
       recipientId, 
@@ -68,6 +58,13 @@ export const useNotifications = () => {
       listingId: string 
     }) => {
       if (!user) throw new Error("User not authenticated");
+      
+      console.log("Sending notification with data:", {
+        recipient_id: recipientId,
+        sender_id: user.id,
+        message,
+        listing_id: listingId,
+      });
 
       const { data, error } = await supabase
         .from('notifications')
@@ -76,6 +73,7 @@ export const useNotifications = () => {
           sender_id: user.id,
           message: message,
           listing_id: listingId,
+          type: 'interest'
         })
         .select();
 
@@ -84,6 +82,7 @@ export const useNotifications = () => {
         throw error;
       }
 
+      console.log("Notification sent successfully:", data);
       return data;
     },
     onSuccess: () => {
@@ -102,7 +101,6 @@ export const useNotifications = () => {
     }
   });
 
-  // Mutation to mark a notification as read
   const markAsRead = useMutation({
     mutationFn: async (notificationId: string) => {
       const { data, error } = await supabase
@@ -119,7 +117,6 @@ export const useNotifications = () => {
     }
   });
 
-  // Mutation to delete a notification
   const deleteNotification = useMutation({
     mutationFn: async (notificationId: string) => {
       const { error } = await supabase
@@ -138,7 +135,6 @@ export const useNotifications = () => {
     }
   });
 
-  // Mutation to clear all notifications
   const clearAllNotifications = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error("User not authenticated");
@@ -159,7 +155,6 @@ export const useNotifications = () => {
     }
   });
 
-  // Set up realtime subscription for new notifications
   const setupRealtimeNotifications = () => {
     if (!user) return () => {};
 
@@ -171,16 +166,13 @@ export const useNotifications = () => {
         table: 'notifications',
         filter: `recipient_id=eq.${user.id}`
       }, payload => {
-        // Get the current notifications from the cache
         const currentNotifications = queryClient.getQueryData<Notification[]>(['notifications', user.id]) || [];
         
-        // Update the cache with the new notification
         queryClient.setQueryData(['notifications', user.id], [
           payload.new as Notification,
           ...currentNotifications
         ]);
 
-        // Show a toast notification
         toast({
           title: "New Notification",
           description: (payload.new as Notification).message,
@@ -188,7 +180,6 @@ export const useNotifications = () => {
       })
       .subscribe();
 
-    // Return a cleanup function
     return () => {
       supabase.removeChannel(channel);
     };
