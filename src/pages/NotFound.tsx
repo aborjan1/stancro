@@ -14,6 +14,10 @@ const NotFound = () => {
                                location.hash.includes('type=recovery') ||
                                location.hash.includes('access_token');
 
+    // Check if this is a direct access to a known route
+    const knownRoutes = ['/dashboard', '/profile', '/settings', '/notifications', '/subscribe'];
+    const isKnownRoute = knownRoutes.some(route => location.pathname.endsWith(route));
+
     if (isEmailConfirmation) {
       // Show success toast
       toast({
@@ -23,6 +27,14 @@ const NotFound = () => {
       
       // Redirect to home page
       navigate("/");
+    } else if (isKnownRoute) {
+      console.log(`Detected direct access to known route: ${location.pathname}`);
+      
+      // For known routes, try to navigate properly through React Router
+      const route = knownRoutes.find(route => location.pathname.endsWith(route));
+      if (route) {
+        navigate(route);
+      }
     } else {
       // Log regular 404 errors
       console.error(
