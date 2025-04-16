@@ -36,17 +36,22 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
   
   // Check if we're on the auth page to apply special styling
   const isAuthPage = location.pathname === '/auth';
+  // Check if we're on internal pages like profile, settings, etc.
+  const isInternalPage = location.pathname.includes('/profile') || 
+                          location.pathname.includes('/settings') || 
+                          location.pathname.includes('/notifications') ||
+                          location.pathname.includes('/dashboard');
   
   return (
     <header className={cn(
       "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-      isScrolled || isAuthPage
+      isScrolled || isAuthPage || isInternalPage
         ? "bg-white/90 dark:bg-[#151C2E]/90 backdrop-blur shadow-md py-3" 
         : "bg-transparent py-4"
     )}>
       <div className="container mx-auto flex items-center justify-between px-4">
         <div className="flex items-center">
-          <Logo isScrolled={isScrolled || isAuthPage} />
+          <Logo isScrolled={isScrolled || isAuthPage || isInternalPage} />
         </div>
         
         <NavigationMenu>
@@ -54,8 +59,8 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
             <NavigationMenuItem>
               <Link to="/">
                 <Button 
-                  variant={isScrolled || isAuthPage ? "ghost" : "outline"} 
-                  className={!(isScrolled || isAuthPage) ? "bg-white/20 text-white hover:bg-white/30" : ""}
+                  variant={isScrolled || isAuthPage || isInternalPage ? "ghost" : "outline"} 
+                  className={!(isScrolled || isAuthPage || isInternalPage) ? "bg-white/20 text-white hover:bg-white/30" : ""}
                 >
                   <Home className="mr-1 h-4 w-4" />
                   Home
@@ -63,13 +68,13 @@ const Navbar = ({ onSearch }: { onSearch?: (searchParams: SearchParams) => void 
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <SearchPopover onSearch={onSearch} isScrolled={isScrolled || isAuthPage} />
+              <SearchPopover onSearch={onSearch} isScrolled={isScrolled || isAuthPage || isInternalPage} />
             </NavigationMenuItem>
             <NavigationMenuItem>
               {user ? (
-                <UserProfileMenu isScrolled={isScrolled || isAuthPage} />
+                <UserProfileMenu isScrolled={isScrolled || isAuthPage || isInternalPage} />
               ) : (
-                <LoginRegisterButton isScrolled={isScrolled || isAuthPage} />
+                <LoginRegisterButton isScrolled={isScrolled || isAuthPage || isInternalPage} />
               )}
             </NavigationMenuItem>
           </NavigationMenuList>
