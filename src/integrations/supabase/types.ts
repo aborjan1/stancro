@@ -46,6 +46,7 @@ export type Database = {
           beds: number
           created_at: string
           description: string | null
+          featured: boolean
           id: string
           images: string[]
           location: string
@@ -63,6 +64,7 @@ export type Database = {
           beds: number
           created_at?: string
           description?: string | null
+          featured?: boolean
           id?: string
           images?: string[]
           location: string
@@ -80,6 +82,7 @@ export type Database = {
           beds?: number
           created_at?: string
           description?: string | null
+          featured?: boolean
           id?: string
           images?: string[]
           location?: string
@@ -165,6 +168,39 @@ export type Database = {
           id?: string
           updated_at?: string
           username?: string | null
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          tier: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          tier?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          tier?: string
+          user_id?: string
         }
         Relationships: []
       }

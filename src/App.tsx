@@ -15,6 +15,7 @@ import Settings from "./pages/Settings";
 import ListingDetail from "./pages/ListingDetail";
 import Notifications from "./pages/Notifications";
 import Dashboard from "./pages/Dashboard";
+import Subscribe from "./pages/Subscribe";
 import Footer from "./components/Footer";
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/settings" element={<Settings />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/subscribe" element={<Subscribe />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

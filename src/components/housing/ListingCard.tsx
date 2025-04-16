@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Building, Bath, BedDouble, Ruler } from 'lucide-react';
+import { Building, Bath, BedDouble, Ruler, Star } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface Listing {
   id: string;
@@ -17,6 +18,7 @@ interface Listing {
   area: string;
   images: string[];
   video_url: string | null;
+  featured?: boolean;
 }
 
 interface ListingCardProps {
@@ -31,7 +33,7 @@ const ListingCard = ({ listing }: ListingCardProps) => {
   };
   
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+    <Card className={`overflow-hidden transition-shadow hover:shadow-lg ${listing.featured ? 'border-2 border-amber-400' : ''}`}>
       <div className="relative aspect-video w-full overflow-hidden">
         <img 
           src={listing.images && listing.images.length > 0 ? listing.images[0] : "/placeholder.svg"} 
@@ -41,6 +43,14 @@ const ListingCard = ({ listing }: ListingCardProps) => {
         <div className="absolute top-2 right-2 bg-[#E56717] text-white px-2 py-1 rounded text-sm font-medium">
           €{listing.price}/month
         </div>
+        {listing.featured && (
+          <div className="absolute top-2 left-2">
+            <Badge className="bg-amber-400 text-black px-2 py-1 flex items-center gap-1">
+              <Star className="h-3 w-3" fill="currentColor" />
+              Featured
+            </Badge>
+          </div>
+        )}
       </div>
       <CardHeader className="pb-2">
         <CardTitle>{listing.title}</CardTitle>

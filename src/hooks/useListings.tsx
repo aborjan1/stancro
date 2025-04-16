@@ -22,6 +22,7 @@ interface Listing {
   area: string;
   images: string[];
   video_url: string | null;
+  featured: boolean;
 }
 
 export const useListings = (searchTerm: string, filters: FilterOptions) => {
@@ -35,7 +36,9 @@ export const useListings = (searchTerm: string, filters: FilterOptions) => {
         
         let query = supabase
           .from('listings')
-          .select('*');
+          .select('*')
+          .order('featured', { ascending: false }) // Featured listings first
+          .order('created_at', { ascending: false }); // Then by date (newest first)
         
         // Apply location filter (prioritize this filter)
         if (searchTerm) {
