@@ -1,15 +1,36 @@
-import { useLocation } from "react-router-dom";
+
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 const NotFound = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
-  }, [location.pathname]);
+    // Check if this is an email confirmation redirect
+    const isEmailConfirmation = location.hash.includes('type=signup') || 
+                               location.hash.includes('type=recovery') ||
+                               location.hash.includes('access_token');
+
+    if (isEmailConfirmation) {
+      // Show success toast
+      toast({
+        title: "Email confirmed successfully",
+        description: "Your email has been confirmed. Welcome to StanCro!",
+      });
+      
+      // Redirect to home page
+      navigate("/");
+    } else {
+      // Log regular 404 errors
+      console.error(
+        "404 Error: User attempted to access non-existent route:",
+        location.pathname
+      );
+    }
+  }, [location.pathname, location.hash, navigate, toast]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
