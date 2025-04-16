@@ -1,7 +1,8 @@
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Card } from "@/components/ui/card";
 import { ExternalLink } from 'lucide-react';
+import { useToast } from "@/components/ui/use-toast";
 
 interface AdBannerProps {
   // The size of the ad banner
@@ -12,16 +13,68 @@ interface AdBannerProps {
   className?: string;
 }
 
+// Map sizes to actual AdSense ad formats
+const adSizeFormats = {
+  small: { width: 300, height: 100 },
+  medium: { width: 300, height: 250 },
+  large: { width: 728, height: 90 }
+};
+
 const AdBanner = ({ size = 'medium', position = 'inline', className = '' }: AdBannerProps) => {
-  // Map sizes to height classes
+  const adContainerRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+  
+  // Map sizes to height classes for fallback/placeholder display
   const sizeClasses = {
     small: 'h-16',
     medium: 'h-24',
     large: 'h-32',
   };
+  
+  // Flag to determine if we should show real ads or mock ads
+  const useRealAds = false; // Set to true when you have your ad network credentials
+  
+  useEffect(() => {
+    if (useRealAds && window.adsbygoogle && adContainerRef.current) {
+      try {
+        // Clear any previous ad content
+        if (adContainerRef.current.children.length > 0) {
+          adContainerRef.current.innerHTML = '';
+        }
 
-  // For a real implementation, you would fetch actual ad content from an ad network
-  // or your own ad management system
+        // Create the ad slot
+        const adElement = document.createElement('ins');
+        const adWidth = adSizeFormats[size].width;
+        const adHeight = adSizeFormats[size].height;
+        
+        adElement.className = 'adsbygoogle';
+        adElement.style.display = 'inline-block';
+        adElement.style.width = `${adWidth}px`;
+        adElement.style.height = `${adHeight}px`;
+        adElement.setAttribute('data-ad-client', 'YOUR-AD-CLIENT-ID'); // Replace with your ad client ID
+        adElement.setAttribute('data-ad-slot', 'YOUR-AD-SLOT-ID');     // Replace with your ad slot ID
+        adElement.setAttribute('data-ad-format', 'auto');
+        
+        // Add the ad to the container
+        adContainerRef.current.appendChild(adElement);
+        
+        // Request an ad
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        
+        // Track ad impression (you can integrate with your analytics here)
+        console.log(`Real Ad impression at position: ${position}`);
+      } catch (error) {
+        console.error('Error displaying ad:', error);
+        toast({
+          title: "Ad Display Error",
+          description: "There was a problem loading the advertisement.",
+          variant: "destructive"
+        });
+      }
+    }
+  }, [size, position, useRealAds]);
+  
+  // Mock ads for development or when real ads aren't configured
   const mockAds = [
     {
       title: "Student Housing Fair",
@@ -43,27 +96,37 @@ const AdBanner = ({ size = 'medium', position = 'inline', className = '' }: AdBa
     }
   ];
 
-  // Select a random ad from our mock ads
+  // Select a random mock ad
   const randomAd = mockAds[Math.floor(Math.random() * mockAds.length)];
 
-  // Track ad impression (in a real implementation, this would call your analytics service)
+  // Track mock ad impression
   React.useEffect(() => {
-    console.log(`Ad impression: ${randomAd.title} at position: ${position}`);
-    // In a real implementation:
-    // trackAdImpression({ adId: randomAd.id, position });
-  }, [position]);
+    if (!useRealAds) {
+      console.log(`Mock Ad impression: ${randomAd.title} at position: ${position}`);
+    }
+  }, [position, randomAd.title, useRealAds]);
 
-  // Handle ad click
-  const handleAdClick = () => {
-    console.log(`Ad clicked: ${randomAd.title} at position: ${position}`);
-    // In a real implementation:
-    // trackAdClick({ adId: randomAd.id, position });
+  // Handle mock ad click
+  const handleMockAdClick = () => {
+    console.log(`Mock Ad clicked: ${randomAd.title} at position: ${position}`);
     window.open(randomAd.url, '_blank');
   };
 
-  return (
+  return useRealAds ? (
+    <div
+      ref={adContainerRef}
+      className={`ad-container ${sizeClasses[size]} overflow-hidden rounded-md ${className}`}
+      data-ad-position={position}
+    >
+      {/* Real ads will be injected here by AdSense */}
+      <div className="flex items-center justify-center h-full w-full bg-gray-100 dark:bg-gray-800">
+        <p className="text-gray-400 text-sm">Advertisement</p>
+      </div>
+    </div>
+  ) : (
+    // Mock ad display
     <Card 
-      onClick={handleAdClick}
+      onClick={handleMockAdClick}
       className={`relative w-full ${sizeClasses[size]} flex items-center px-4 cursor-pointer overflow-hidden hover:shadow-md transition-shadow ${randomAd.bgColor} ${className}`}
     >
       <div className="absolute top-1 right-2 text-xs text-white opacity-70">Ad</div>
