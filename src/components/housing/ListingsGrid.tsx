@@ -3,6 +3,7 @@ import React from 'react';
 import ListingCard from './ListingCard';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import AdBanner from '@/components/AdBanner';
 
 interface Listing {
   id: string;
@@ -63,11 +64,32 @@ const ListingsGrid = ({ listings, isLoading, error }: ListingsGridProps) => {
     );
   }
 
+  // Create a copy of listings to insert ads
+  const listingsWithAds = [...listings];
+  
+  // Insert inline ads after every 4th listing (if there are enough listings)
+  if (listingsWithAds.length >= 4) {
+    // Insert ad after 4th item 
+    listingsWithAds.splice(4, 0, { id: 'ad-1', isAd: true } as unknown as Listing);
+    
+    // If we have more than 9 listings, add another ad
+    if (listingsWithAds.length >= 10) {
+      listingsWithAds.splice(10, 0, { id: 'ad-2', isAd: true } as unknown as Listing);
+    }
+  }
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {listings.map((listing) => (
-          <ListingCard key={listing.id} listing={listing} />
+        {listingsWithAds.map((listing) => (
+          // @ts-ignore - We're adding a custom isAd property
+          listing.isAd ? (
+            <div key={listing.id} className="w-full flex items-center justify-center">
+              <AdBanner size="medium" position="inline" className="h-auto min-h-[220px]" />
+            </div>
+          ) : (
+            <ListingCard key={listing.id} listing={listing} />
+          )
         ))}
       </div>
       <div className="flex justify-center mt-10">

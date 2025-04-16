@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import HousingHero from '@/components/housing/HousingHero';
 import ListingsSection from '@/components/housing/ListingsSection';
+import AdBanner from '@/components/AdBanner';
 import { useListings } from '@/hooks/useListings';
 
 // Interface for search filters
@@ -68,6 +69,11 @@ const Housing = () => {
 
       {/* Hero section */}
       <HousingHero searchTerm={searchTerm} filters={filters} />
+      
+      {/* Top Ad Banner */}
+      <div className="container mx-auto px-4 mt-4">
+        <AdBanner size="medium" position="top" />
+      </div>
 
       {/* Housing listing section */}
       <ListingsSection 
@@ -76,6 +82,11 @@ const Housing = () => {
         error={error} 
         searchTerm={searchTerm}
       />
+      
+      {/* Bottom Ad Banner */}
+      <div className="container mx-auto px-4 mb-10 mt-2">
+        <AdBanner size="large" position="footer" />
+      </div>
     </div>
   );
 };
