@@ -1,29 +1,65 @@
 
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, MapPin, Building, BedDouble, Bath, Ruler } from 'lucide-react';
 import { useListing } from '@/hooks/useListing';
+import { useNotifications } from '@/hooks/useNotifications';
+import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/hooks/use-toast';
 
 const ListingDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { data: listing, isLoading, error } = useListing(id);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { sendNotification } = useNotifications();
 
   // Function to handle contact owner button click
   const handleContactOwner = () => {
-    toast({
-      title: "Contact Request Sent",
-      description: "The property owner has been notified of your interest.",
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please login or register to contact the property owner.",
+      });
+      navigate('/auth');
+      return;
+    }
+
+    if (!listing) return;
+
+    // Don't allow contacting your own listing
+    if (user.id === listing.owner_id) {
+      toast({
+        title: "Own Property",
+        description: "This is your own listing.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Send a notification to the property owner
+    sendNotification.mutate({
+      recipientId: listing.owner_id,
+      message: `${user.user_metadata?.full_name || user.email} is interested in your property "${listing.title}"`,
+      listingId: listing.id
     });
   };
 
   // Function to handle save to favorites
   const handleSaveToFavorites = () => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please login or register to save properties.",
+      });
+      navigate('/auth');
+      return;
+    }
+
     toast({
       title: "Property Saved",
       description: "This property has been added to your favorites.",
@@ -202,10 +238,18 @@ const ListingDetail = () => {
                 <p className="text-sm text-muted-foreground mb-6">
                   Contact the property owner directly to arrange a viewing.
                 </p>
-                <Button onClick={handleContactOwner} className="w-full mb-4 bg-[#E56717] hover:bg-[#D55606] text-white">
-                  Contact Owner
+                <Button 
+                  onClick={handleContactOwner} 
+                  className="w-full mb-4 bg-[#E56717] hover:bg-[#D55606] text-white"
+                  disabled={sendNotification.isPending}
+                >
+                  {sendNotification.isPending ? "Sending..." : "Contact Owner"}
                 </Button>
-                <Button variant="outline" className="w-full border-[#E56717] text-[#E56717] hover:bg-[#E56717]/10" onClick={handleSaveToFavorites}>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-[#E56717] text-[#E56717] hover:bg-[#E56717]/10" 
+                  onClick={handleSaveToFavorites}
+                >
                   Save to Favorites
                 </Button>
               </div>

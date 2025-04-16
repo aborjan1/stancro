@@ -1,47 +1,52 @@
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNotifications } from "@/hooks/useNotifications";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useToast } from "@/hooks/use-toast";
-import { Bell } from "lucide-react";
+import { Bell, Loader2 } from "lucide-react";
+import { format, isToday, isYesterday } from 'date-fns';
 
 const Notifications = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [notifications, setNotifications] = useState([
-    { id: 1, message: "Ana is interested in your apartment in Zagreb", date: "Today" },
-    { id: 2, message: "Marko is interested in your house in Split", date: "Yesterday" },
-    { id: 3, message: "Ivan wants to know more about your property", date: "2 days ago" },
-    { id: 4, message: "Petra is looking for more details on your listing", date: "Last week" },
-  ]);
+  const { 
+    notifications, 
+    isLoading, 
+    clearAllNotifications, 
+    deleteNotification,
+    markAsRead,
+    setupRealtimeNotifications
+  } = useNotifications();
   
   // Redirect to auth page if user is not authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (!user) {
       navigate('/auth');
     }
   }, [user, navigate]);
 
-  const clearNotifications = () => {
-    setNotifications([]);
-    toast({
-      title: "Notifications cleared",
-      description: "All notifications have been removed",
-    });
+  // Set up realtime notifications
+  useEffect(() => {
+    const cleanup = setupRealtimeNotifications();
+    return cleanup;
+  }, []);
+
+  const handleNotificationClick = (notificationId: string) => {
+    markAsRead.mutate(notificationId);
   };
 
-  const handleNotificationClick = (id: number) => {
-    toast({
-      title: "Notification handled",
-      description: "You've responded to the notification",
-    });
-    
-    // Remove the notification from the list
-    setNotifications(notifications.filter(notification => notification.id !== id));
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    if (isToday(date)) {
+      return 'Today';
+    } else if (isYesterday(date)) {
+      return 'Yesterday';
+    } else {
+      return format(date, 'MMM d');
+    }
   };
 
   if (!user) return null;
@@ -98,22 +103,56 @@ const Notifications = () => {
             </div>
             
             <div className="space-y-6">
-              {notifications.length > 0 ? (
+              {isLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                </div>
+              ) : notifications.length > 0 ? (
                 <div>
                   <div className="grid grid-cols-1 gap-4">
                     {notifications.map((notification) => (
-                      <div key={notification.id} className="bg-slate-50 p-4 rounded-md border border-slate-100">
+                      <div 
+                        key={notification.id} 
+                        className={`p-4 rounded-md border ${notification.read ? 'bg-white border-slate-100' : 'bg-slate-50 border-slate-200'}`}
+                      >
                         <div className="flex justify-between">
-                          <p className="font-medium">{notification.message}</p>
-                          <span className="text-sm text-gray-500">{notification.date}</span>
+                          <div className="flex items-start gap-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={notification.sender?.avatar_url || undefined} />
+                              <AvatarFallback>{notification.sender?.full_name?.[0] || '?'}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className={`${notification.read ? 'font-normal' : 'font-medium'}`}>
+                                {notification.message}
+                              </p>
+                              {!notification.read && (
+                                <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded mt-1">
+                                  New
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <span className="text-sm text-gray-500">
+                            {formatDate(notification.created_at)}
+                          </span>
                         </div>
                         <div className="mt-4 flex justify-end space-x-2">
                           <Button 
                             size="sm" 
                             variant="outline"
                             onClick={() => handleNotificationClick(notification.id)}
+                            disabled={markAsRead.isPending}
                           >
-                            Contact
+                            {notification.read ? "Contacted" : "Mark as Read"}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-red-500 border-red-200 hover:bg-red-50"
+                            onClick={() => deleteNotification.mutate(notification.id)}
+                            disabled={deleteNotification.isPending}
+                          >
+                            Delete
                           </Button>
                         </div>
                       </div>
@@ -123,9 +162,10 @@ const Notifications = () => {
                   <div className="mt-6 flex justify-end">
                     <Button 
                       variant="outline"
-                      onClick={clearNotifications}
+                      onClick={() => clearAllNotifications.mutate()}
+                      disabled={clearAllNotifications.isPending}
                     >
-                      Clear all notifications
+                      {clearAllNotifications.isPending ? "Clearing..." : "Clear all notifications"}
                     </Button>
                   </div>
                 </div>

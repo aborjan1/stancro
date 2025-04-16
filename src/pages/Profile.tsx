@@ -1,46 +1,38 @@
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNotifications } from "@/hooks/useNotifications";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useToast } from "@/hooks/use-toast";
 import { Bell } from "lucide-react";
 
 const Profile = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [notifications, setNotifications] = useState([
-    { id: 1, message: "Ana is interested in your apartment in Zagreb", date: "Today" },
-    { id: 2, message: "Marko is interested in your house in Split", date: "Yesterday" },
-  ]);
+  const { 
+    notifications, 
+    markAsRead, 
+    clearAllNotifications,
+    setupRealtimeNotifications
+  } = useNotifications();
   
   // Redirect to auth page if user is not authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (!user) {
       navigate('/auth');
     }
   }, [user, navigate]);
 
-  const clearNotifications = () => {
-    setNotifications([]);
-    toast({
-      title: "Notifications cleared",
-      description: "All notifications have been removed",
-    });
-  };
+  // Set up realtime notifications
+  useEffect(() => {
+    const cleanup = setupRealtimeNotifications();
+    return cleanup;
+  }, []);
 
-  const handleNotificationClick = (id: number) => {
-    // Here you would handle the notification, e.g. mark as read, navigate to listing, etc.
-    toast({
-      title: "Notification handled",
-      description: "You've responded to the notification",
-    });
-    
-    // Remove the notification from the list
-    setNotifications(notifications.filter(notification => notification.id !== id));
+  const handleNotificationClick = (notificationId: string) => {
+    markAsRead.mutate(notificationId);
   };
 
   const goToNotifications = () => {
@@ -48,6 +40,9 @@ const Profile = () => {
   };
 
   if (!user) return null;
+
+  // Get only a few recent notifications for display
+  const recentNotifications = notifications.slice(0, 2);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -109,13 +104,15 @@ const Profile = () => {
               
               <div>
                 <h2 className="text-lg font-medium mb-2">Notifications</h2>
-                {notifications.length > 0 ? (
+                {recentNotifications.length > 0 ? (
                   <div className="space-y-2">
-                    {notifications.map((notification) => (
+                    {recentNotifications.map((notification) => (
                       <div key={notification.id} className="bg-slate-50 p-4 rounded-md border border-slate-100">
                         <div className="flex justify-between">
                           <p>{notification.message}</p>
-                          <span className="text-sm text-gray-500">{notification.date}</span>
+                          <span className="text-sm text-gray-500">
+                            {new Date(notification.created_at).toLocaleDateString()}
+                          </span>
                         </div>
                         <div className="mt-2 flex justify-end space-x-2">
                           <Button 
@@ -123,7 +120,7 @@ const Profile = () => {
                             variant="outline"
                             onClick={() => handleNotificationClick(notification.id)}
                           >
-                            Contact
+                            {notification.read ? 'Contacted' : 'Contact'}
                           </Button>
                         </div>
                       </div>
@@ -132,7 +129,8 @@ const Profile = () => {
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        onClick={clearNotifications}
+                        onClick={() => clearAllNotifications.mutate()}
+                        disabled={clearAllNotifications.isPending}
                       >
                         Clear all
                       </Button>
@@ -142,7 +140,7 @@ const Profile = () => {
                         size="sm"
                         onClick={goToNotifications}
                       >
-                        View all notifications
+                        View all notifications ({notifications.length})
                       </Button>
                     </div>
                   </div>
