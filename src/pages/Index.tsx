@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -29,17 +30,17 @@ const Index = () => {
       description: "Croatia's capital with vibrant student life"
     },
     {
-      url: "/placeholder.svg",
+      url: "https://images.unsplash.com/photo-1555990538-2237e72eef2c?q=80&w=1000&auto=format&fit=crop",
       city: "Split",
       description: "Coastal city with Mediterranean charm"
     },
     {
-      url: "/placeholder.svg",
+      url: "https://images.unsplash.com/photo-1565894098565-a8dd202b0ebe?q=80&w=1000&auto=format&fit=crop",
       city: "Rijeka",
       description: "Port city with affordable student housing"
     },
     {
-      url: "/placeholder.svg",
+      url: "https://images.unsplash.com/photo-1618911752184-61790da33a39?q=80&w=1000&auto=format&fit=crop",
       city: "Osijek",
       description: "University city on the Drava river"
     }
@@ -215,7 +216,7 @@ const Index = () => {
             <div className="md:w-1/2">
               <div className="rounded-lg overflow-hidden shadow-xl">
                 <img 
-                  src="/placeholder.svg" 
+                  src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1000&auto=format&fit=crop" 
                   alt="List your property" 
                   className="w-full h-auto"
                 />
