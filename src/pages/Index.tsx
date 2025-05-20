@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/home/HeroSection";
@@ -6,7 +7,6 @@ import PropertyListingSection from "@/components/home/PropertyListingSection";
 import HowItWorksSection from "@/components/home/HowItWorksSection";
 import CitiesSection from "@/components/home/CitiesSection";
 import NewsletterSection from "@/components/home/NewsletterSection";
-import Footer from "@/components/Footer";
 
 interface FilterOptions {
   priceRange: [number, number];
@@ -72,7 +72,6 @@ const Index = () => {
       <HowItWorksSection />
       <CitiesSection />
       <NewsletterSection />
-      <Footer />
     </div>
   );
 };
