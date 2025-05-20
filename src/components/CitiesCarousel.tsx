@@ -13,40 +13,40 @@ import { Badge } from "@/components/ui/badge";
 
 const cities = [
   {
-    name: "Zagreb",
-    image: "https://images.unsplash.com/photo-1541232484988-44a4147ad6c0?q=80&w=1000&auto=format&fit=crop",
-    housingCount: 156,
-    tag: "Capital"
-  },
-  {
     name: "Split",
-    image: "https://images.unsplash.com/photo-1555990793-da11153b2473?q=80&w=1000&auto=format&fit=crop",
-    housingCount: 89,
-    tag: "Beach"
-  },
-  {
-    name: "Dubrovnik",
-    image: "https://images.unsplash.com/photo-1522175279007-54cd987c196c?q=80&w=1000&auto=format&fit=crop",
-    housingCount: 64,
-    tag: "Historic"
+    image: "/lovable-uploads/aa8da853-778a-45ed-aeae-1a3e871e76fc.png",
+    housingCount: 156,
+    tag: "Coastal"
   },
   {
     name: "Rijeka",
-    image: "https://images.unsplash.com/photo-1565894098565-a8dd202b0ebe?q=80&w=1000&auto=format&fit=crop",
-    housingCount: 42,
+    image: "/lovable-uploads/f2893f4c-e52e-447f-b087-a5dd148e9217.png",
+    housingCount: 89,
     tag: "Port"
   },
   {
     name: "Osijek",
-    image: "https://images.unsplash.com/photo-1618911752184-61790da33a39?q=80&w=1000&auto=format&fit=crop",
-    housingCount: 38,
+    image: "/lovable-uploads/aff17a74-257c-4130-873f-8795379dd416.png",
+    housingCount: 64,
     tag: "River"
   },
   {
+    name: "Dubrovnik",
+    image: "/lovable-uploads/6be39931-0312-4f94-b26d-6f6744dbf77a.png",
+    housingCount: 42,
+    tag: "Historic"
+  },
+  {
     name: "Zadar",
-    image: "https://images.unsplash.com/photo-1555990538-2237e72eef2c?q=80&w=1000&auto=format&fit=crop",
+    image: "/lovable-uploads/ca6bf2f5-56fe-4ee4-a408-699db387dea9.png",
     housingCount: 51,
     tag: "Coastal"
+  },
+  {
+    name: "Zagreb",
+    image: "/lovable-uploads/fc5d8e4b-854f-4734-96e0-59abf743630e.png",
+    housingCount: 178,
+    tag: "Capital"
   }
 ];
 
