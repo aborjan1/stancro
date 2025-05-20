@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Carousel, 
@@ -10,6 +9,8 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Home, MapPin, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useScrollPosition } from "@/hooks/useScrollPosition";
+import { cn } from "@/lib/utils";
 
 const cities = [
   {
@@ -53,6 +54,8 @@ const cities = [
 const CitiesCarousel = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [favoriteIndices, setFavoriteIndices] = useState<number[]>([]);
+  const scrollPosition = useScrollPosition();
+  const [isVisible, setIsVisible] = useState(false);
 
   const toggleFavorite = (index: number) => {
     if (favoriteIndices.includes(index)) {
@@ -62,10 +65,30 @@ const CitiesCarousel = () => {
     }
   };
 
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const element = document.getElementById('cities-carousel');
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        if (rect.top < windowHeight - 100) {
+          setIsVisible(true);
+        }
+      }
+    };
+    
+    handleScroll(); // Check on initial render
+    
+    return () => {};
+  }, [scrollPosition]);
+
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-r from-gray-50 to-blue-50">
+    <section id="cities-carousel" className="py-16 md:py-24 bg-gradient-to-r from-gray-50 to-blue-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <div className={cn(
+          "text-center mb-12 transition-all duration-700",
+          isVisible ? "opacity-100 transform translate-y-0" : "opacity-0 transform translate-y-10"
+        )}>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Discover Croatian Cities</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Find student housing in these beautiful locations across Croatia
@@ -77,7 +100,10 @@ const CitiesCarousel = () => {
             align: "start",
             loop: true,
           }}
-          className="w-full"
+          className={cn(
+            "w-full transition-all duration-700",
+            isVisible ? "opacity-100 transform translate-y-0" : "opacity-0 transform translate-y-10"
+          )}
         >
           <CarouselContent className="-ml-2 md:-ml-4">
             {cities.map((city, index) => (
