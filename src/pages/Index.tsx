@@ -1,13 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { ArrowRight, Home, CheckCircle, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import CitiesCarousel from "@/components/CitiesCarousel";
+import React from 'react';
 import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/home/HeroSection";
+import FeaturesSection from "@/components/home/FeaturesSection";
+import PropertyListingSection from "@/components/home/PropertyListingSection";
+import HowItWorksSection from "@/components/home/HowItWorksSection";
+import CitiesSection from "@/components/home/CitiesSection";
+import NewsletterSection from "@/components/home/NewsletterSection";
 
 interface FilterOptions {
   priceRange: [number, number];
@@ -22,7 +21,6 @@ interface SearchParams {
 }
 
 const Index = () => {
-  const navigate = useNavigate();
   const cityImages = [
     {
       url: "/lovable-uploads/fc5d8e4b-854f-4734-96e0-59abf743630e.png",
@@ -45,22 +43,6 @@ const Index = () => {
       description: "University city on the Drava river"
     }
   ];
-  
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [fadeIn, setFadeIn] = useState(true);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFadeIn(false);
-      
-      setTimeout(() => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % cityImages.length);
-        setFadeIn(true);
-      }, 500); // Wait for fade out to complete
-    }, 5000); // Change image every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [cityImages.length]);
 
   const handleSearch = (searchParams: SearchParams) => {
     const { searchTerm, filters } = searchParams;
@@ -78,217 +60,18 @@ const Index = () => {
     if (filters.bedrooms !== null) params.set('beds', filters.bedrooms.toString());
     if (filters.bathrooms !== null) params.set('baths', filters.bathrooms.toString());
     
-    navigate(`/housing?${params.toString()}`);
+    window.location.href = `/housing?${params.toString()}`;
   };
-
-  const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Subscribed to newsletter");
-  };
-  
-  const currentImage = cityImages[currentImageIndex];
-  
-  const howItWorksSteps = [
-    {
-      icon: "🔍",
-      title: "Search",
-      description: "Browse verified student housing options across Croatia's university cities."
-    },
-    {
-      icon: "💬",
-      title: "Connect",
-      description: "Message landlords directly to ask questions and schedule viewings."
-    },
-    {
-      icon: "✅",
-      title: "Apply",
-      description: "Submit your application online with just a few clicks."
-    },
-    {
-      icon: "🏠",
-      title: "Move In",
-      description: "Sign the lease and get ready to enjoy your new student home."
-    }
-  ];
   
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar onSearch={handleSearch} />
-
-      <header className="relative h-[90vh] w-full overflow-hidden">
-        <div 
-          className={cn(
-            "absolute inset-0 bg-cover bg-center transition-opacity duration-500",
-            fadeIn ? "opacity-100" : "opacity-0"
-          )}
-          style={{ backgroundImage: `url(${currentImage.url})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#151C2E]"></div>
-        </div>
-        
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Find Your Perfect Student Home in {currentImage.city}
-          </h1>
-          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl">
-            {currentImage.description}
-          </p>
-          <Button size="lg" onClick={() => navigate("/housing")} className="bg-[#E56717] hover:bg-[#d05c13] text-white">
-            Browse Available Housing
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </div>
-      </header>
-
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Why Choose StanCro?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Verified Student Housing</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>All listings are verified to ensure they meet student housing standards and requirements.</p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Budget-Friendly Options</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Find accommodations that fit your budget with transparent pricing and no hidden fees.</p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Close to Universities</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Discover housing options located near your university for convenient access to campus.</p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-      
-      <section className="py-20 bg-[#F5F7FA]">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-            <div className="md:w-1/2 space-y-6">
-              <h2 className="text-3xl font-bold">List Your Property on StanCro</h2>
-              <p className="text-lg text-gray-600">
-                Are you a property owner with housing suitable for students? Join our platform and connect with thousands of students looking for their next home.
-              </p>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="h-6 w-6 text-[#E56717] mt-1" />
-                  <div>
-                    <h3 className="font-medium text-lg">Reach More Students</h3>
-                    <p className="text-gray-600">Connect with the largest pool of student renters in Croatia.</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="h-6 w-6 text-[#E56717] mt-1" />
-                  <div>
-                    <h3 className="font-medium text-lg">Easy Management</h3>
-                    <p className="text-gray-600">Manage bookings, communicate with tenants, and track payments all in one place.</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="h-6 w-6 text-[#E56717] mt-1" />
-                  <div>
-                    <h3 className="font-medium text-lg">Verified Tenants</h3>
-                    <p className="text-gray-600">All student profiles are verified, providing peace of mind for landlords.</p>
-                  </div>
-                </div>
-              </div>
-              <Button 
-                className="bg-[#E56717] hover:bg-[#d05c13] text-white"
-                onClick={() => navigate("/list-property")}
-              >
-                List Your Property
-                <Home className="ml-2 h-5 w-5" />
-              </Button>
-            </div>
-            <div className="md:w-1/2">
-              <div className="rounded-lg overflow-hidden shadow-xl">
-                <img 
-                  src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1000&auto=format&fit=crop" 
-                  alt="List your property" 
-                  className="w-full h-auto"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      {/* How StanCro Works Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-4">How StanCro Works</h2>
-          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Finding your perfect student accommodation in Croatia has never been easier</p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {howItWorksSteps.map((step, index) => (
-              <div key={index} className="flex flex-col items-center text-center">
-                <div className="w-24 h-24 rounded-full bg-[#F5F7FA] flex items-center justify-center text-4xl mb-4">
-                  {step.icon}
-                </div>
-                <h3 className="text-xl font-bold mb-2">{step.title}</h3>
-                <p className="text-gray-600">{step.description}</p>
-                
-                {index < howItWorksSteps.length - 1 && (
-                  <div className="hidden lg:flex items-center justify-center absolute right-[-20px] top-1/2 transform -translate-y-1/2">
-                    <ChevronRight className="h-8 w-8 text-gray-300" />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          
-          <div className="flex justify-center mt-12">
-            <Button 
-              onClick={() => navigate("/about")}
-              variant="outline"
-              className="border-[#E56717] text-[#E56717] hover:bg-[#E56717] hover:text-white"
-            >
-              Learn more
-              <ChevronRight className="ml-1 h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </section>
-      
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <p className="text-center text-gray-600 mb-12"></p>
-          
-          <CitiesCarousel />
-        </div>
-      </section>
-      
-      <section className="py-20 bg-[#151C2E] text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
-          <p className="mb-8 max-w-2xl mx-auto">Subscribe to our newsletter to receive updates on new listings and student housing tips.</p>
-          
-          <form onSubmit={handleSubscribe} className="flex flex-col md:flex-row gap-3 max-w-md mx-auto">
-            <Input 
-              type="email" 
-              placeholder="Your email address"
-              required
-              className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-            />
-            <Button type="submit" className="bg-[#E56717] hover:bg-[#d05c13]">
-              Subscribe
-            </Button>
-          </form>
-        </div>
-      </section>
+      <HeroSection cityImages={cityImages} />
+      <FeaturesSection />
+      <PropertyListingSection />
+      <HowItWorksSection />
+      <CitiesSection />
+      <NewsletterSection />
       
       <footer className="bg-gray-900 text-white py-6">
         <div className="container mx-auto px-4">
