@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/home/HeroSection";
@@ -7,6 +6,7 @@ import PropertyListingSection from "@/components/home/PropertyListingSection";
 import HowItWorksSection from "@/components/home/HowItWorksSection";
 import CitiesSection from "@/components/home/CitiesSection";
 import NewsletterSection from "@/components/home/NewsletterSection";
+import Footer from "@/components/Footer";
 
 interface FilterOptions {
   priceRange: [number, number];
@@ -72,15 +72,7 @@ const Index = () => {
       <HowItWorksSection />
       <CitiesSection />
       <NewsletterSection />
-      
-      <footer className="bg-gray-900 text-white py-6">
-        <div className="container mx-auto px-4">
-          <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400">© {new Date().getFullYear()} StanCro. All rights reserved.</p>
-            <p className="text-gray-400">Created by Team Stanko</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
