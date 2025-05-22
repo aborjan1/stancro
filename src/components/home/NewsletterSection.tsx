@@ -14,7 +14,7 @@ const NewsletterSection = () => {
     <section className="py-20 bg-[#151C2E] text-white">
       <div className="container mx-auto px-4 text-center">
         <ScrollAnimation animation="fade-up">
-          <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Stay Updated</h2>
           <p className="mb-8 max-w-2xl mx-auto">Subscribe to our newsletter to receive updates on new listings and student housing tips.</p>
         </ScrollAnimation>
         

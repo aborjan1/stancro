@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   Carousel, 
@@ -140,12 +141,12 @@ const CitiesCarousel = () => {
                       </button>
                       
                       {/* Content Overlay */}
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-4 text-white">
-                        <div className="flex items-center mb-2">
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-4 text-white text-center">
+                        <div className="flex items-center justify-center mb-2">
                           <MapPin className="h-4 w-4 mr-1 text-primary-foreground" />
                           <h3 className="text-xl font-bold">{city.name}</h3>
                         </div>
-                        <div className="flex items-center">
+                        <div className="flex items-center justify-center">
                           <Home className="h-4 w-4 mr-1" />
                           <p className="text-sm font-medium">
                             <span className="text-white/90">{city.housingCount}</span>
